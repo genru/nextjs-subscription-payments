@@ -1,43 +1,44 @@
 import Pricing from '@/components/ui/Pricing/Pricing';
 import { createClient } from '@/utils/supabase/server';
 
-export async function getServerSideProps() {
-    const supabase = createClient();
-console.log('static data fetching....')
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
 
-    const { data: subscription, error } = await supabase
-      .from('subscriptions')
-      .select('*, prices(*, products(*))')
-      .in('status', ['trialing', 'active'])
-      .maybeSingle();
+export default async function PricingPage() {
 
-    if (error) {
-      console.log(error);
-    }
+    async function getData() {
+        'use server';
+        const supabase = createClient();
 
-    const { data: products } = await supabase
-      .from('products')
-      .select('*, prices(*)')
-      .eq('active', true)
-      .eq('prices.active', true)
-      .order('metadata->index')
-      .order('unit_amount', { referencedTable: 'prices' });
+        const {
+          data: { user }
+        } = await supabase.auth.getUser();
 
+        const { data: subscription, error } = await supabase
+          .from('subscriptions')
+          .select('*, prices(*, products(*))')
+          .in('status', ['trialing', 'active'])
+          .maybeSingle();
 
-    return {
-        props: {
-          user,
-          products,
-          subscription
+        if (error) {
+          console.log(error);
         }
-    };
-}
 
-export default async function PricingPage({user, products, subscription}) {
+        const { data: products } = await supabase
+          .from('products')
+          .select('*, prices(*)')
+          .eq('active', true)
+          .eq('prices.active', true)
+          .order('metadata->index')
+          .order('unit_amount', { referencedTable: 'prices' });
 
+
+        return {
+              user,
+              products,
+              subscription
+        };
+
+    }
+    const {user, products, subscription} = await getData();
   return (
     <Pricing
       user={user}

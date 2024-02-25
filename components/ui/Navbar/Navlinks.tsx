@@ -13,7 +13,7 @@ import s from './Navbar.module.css';
 interface NavlinksProps {
   user?: any;
 }
-const LogoFont = League_Spartan({weight: '800'})
+const LogoFont = League_Spartan({weight: '800', subsets: ['latin']})
 
 export default function Navlinks({ user }: NavlinksProps) {
   const router = getRedirectMethod() === 'client' ? useRouter() : null;

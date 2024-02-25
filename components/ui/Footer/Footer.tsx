@@ -4,7 +4,7 @@ import GitHub from '@/components/icons/GitHub';
 import { League_Spartan } from 'next/font/google';
 import Logo from '../Logo/Logo';
 
-const LogoFont = League_Spartan({weight: '800'})
+const LogoFont = League_Spartan({weight: '800', subsets: ['latin']})
 
 export default function Footer() {
   return (
