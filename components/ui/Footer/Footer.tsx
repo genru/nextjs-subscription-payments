@@ -1,7 +1,10 @@
 import Link from 'next/link';
-
-import Logo from '@/components/icons/Logo';
+// import Logo from '@/components/icons/Logo';
 import GitHub from '@/components/icons/GitHub';
+import { League_Spartan } from 'next/font/google';
+import Logo from '../Logo/Logo';
+
+const LogoFont = League_Spartan({weight: '800'})
 
 export default function Footer() {
   return (
@@ -12,10 +15,13 @@ export default function Footer() {
             href="/"
             className="flex items-center flex-initial font-bold md:mr-24"
           >
-            <span className="mr-2 border rounded-full border-zinc-700">
-              <Logo />
+            <span className="mr-2">
+              {/* <Logo /> */}
+              <span className={LogoFont.className+' '+'text-3xl'}>
+                poddiy
+              </span>
+
             </span>
-            <span>ACME</span>
           </Link>
         </div>
         <div className="col-span-1 lg:col-span-2">
