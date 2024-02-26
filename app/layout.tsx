@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
 import 'styles/main.css';
+import Script from 'next/script';
 
 const meta = {
   title: 'Next.js Subscription Starter',
@@ -49,6 +50,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
+      <Script src='https://analytics.us.umami.is/script.js' defer data-website-id="5fb46da8-4005-46bb-833f-129b67cd4229">
+      {/* <script defer src="https://analytics.us.umami.is/script.js" data-website-id="5fb46da8-4005-46bb-833f-129b67cd4229"></script> */}
+      </Script>
       <body className=" loading">
         <Navbar />
         <main

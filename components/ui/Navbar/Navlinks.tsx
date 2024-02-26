@@ -37,7 +37,7 @@ export default function Navlinks({ user }: NavlinksProps) {
             </li>
           {user && (
           <li>
-          <Link href="/account" className={s.link}>
+          <Link href="/account">
               Account
             </Link>
             </li>
@@ -58,7 +58,7 @@ export default function Navlinks({ user }: NavlinksProps) {
           {user ? (
           <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
             <input type="hidden" name="pathName" value={usePathname()} />
-            <button type="submit" className={s.link}>
+            <button type="submit">
               Sign out
             </button>
           </form>

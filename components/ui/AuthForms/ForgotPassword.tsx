@@ -44,7 +44,7 @@ export default function ForgotPassword({
           </div>
           <button
             type="submit"
-            className="mt-1 d-btn d-btn-neutral"
+            className="mt-1 d-btn d-btn-primary"
             disabled={disableButton}
           >
 

@@ -42,6 +42,8 @@ const upsertPriceRecord = async (
 ) => {
   const priceData: Price = {
     id: price.id,
+    description: '',
+    metadata: price.metadata,
     product_id: typeof price.product === 'string' ? price.product : '',
     active: price.active,
     currency: price.currency,
@@ -282,11 +284,27 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
+const createFeed = async (content: string, uuid: string) => {
+  const feed: TablesInsert<'feeds'> = {
+    // id: 1,
+    created_at: (new Date()).toISOString(),
+    rss: content
+  }
+  const {error: insertError, data: feedData} = await supabaseAdmin.from('feeds').insert(feed);
+  if (insertError) {
+    console.warn(insertError, insertError.message);
+    console.error(`Feed insert failed: ${insertError}`);
+    throw new Error(`Feed insert failed: ${insertError}`)
+  }
+  return feedData;
+}
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
   deleteProductRecord,
   deletePriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  createFeed
 };
