@@ -38,15 +38,13 @@ export default function OauthSignIn() {
           onSubmit={(e) => handleSubmit(e)}
         >
           <input type="hidden" name="provider" value={provider.name} />
-          <Button
-            variant="slim"
+          <button
             type="submit"
-            className="w-full"
-            loading={isSubmitting}
+            className="w-full d-btn"
           >
-            <span className="mr-2">{provider.icon}</span>
-            <span>{provider.displayName}</span>
-          </Button>
+            {isSubmitting? (<span className="d-loading d-loading-spinner"></span>):(<><span className="mr-2">{provider.icon}</span><span>{provider.displayName}</span></>)}
+
+          </button>
         </form>
       ))}
     </div>

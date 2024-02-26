@@ -4,7 +4,7 @@ const LogoFont = League_Spartan({weight: '800', subsets: ['latin']})
 
 const Logo = ({ ...props }) => (
 
-  <span className={LogoFont.className + ' '+'text-2xl'}>poddiy</span>
+  <span className={LogoFont.className + ' '+'text-3xl'}>poddiy</span>
 
 );
 
