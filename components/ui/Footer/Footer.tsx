@@ -1,8 +1,7 @@
 import Link from 'next/link';
-// import Logo from '@/components/icons/Logo';
+import Logo from '@/components/icons/Logo';
 import GitHub from '@/components/icons/GitHub';
 import { League_Spartan } from 'next/font/google';
-import Logo from '../Logo/Logo';
 
 const LogoFont = League_Spartan({weight: '800', subsets: ['latin']})
 
