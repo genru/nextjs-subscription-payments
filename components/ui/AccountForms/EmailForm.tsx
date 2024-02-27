@@ -36,14 +36,19 @@ export default function EmailForm({
           <p className="pb-4 sm:pb-0">
             We will email you to verify the change.
           </p>
-          <Button
+          {/* <Button
             variant="slim"
             type="submit"
             form="emailForm"
             loading={isSubmitting}
           >
             Update Email
-          </Button>
+          </Button> */}
+          <button className='d-btn d-btn-neutral d-btn-wide' type="submit"
+            form="emailForm">
+            {isSubmitting? (<span className="d-loading d-loading-spinner"></span>): "Update Email"}
+          </button>
+
         </div>
       }
     >
@@ -52,7 +57,7 @@ export default function EmailForm({
           <input
             type="text"
             name="newEmail"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
+            className="w-1/2 p-3 rounded-md d-input d-input-bordered"
             defaultValue={userEmail ?? ''}
             placeholder="Your email"
             maxLength={64}

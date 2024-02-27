@@ -30,14 +30,19 @@ export default function NameForm({ userName }: { userName: string }) {
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <p className="pb-4 sm:pb-0">64 characters maximum</p>
-          <Button
+          {/* <Button
             variant="slim"
             type="submit"
             form="nameForm"
             loading={isSubmitting}
           >
             Update Name
-          </Button>
+          </Button> */}
+          <button className='d-btn d-btn-neutral d-btn-wide' type="submit"
+            form="nameForm">
+            {isSubmitting? (<span className="d-loading d-loading-spinner"></span>): "Update Name"}
+          </button>
+
         </div>
       }
     >
@@ -46,7 +51,7 @@ export default function NameForm({ userName }: { userName: string }) {
           <input
             type="text"
             name="fullName"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
+            className="w-1/2 p-3 rounded-md d-input d-input-bordered"
             defaultValue={userName}
             placeholder="Your name"
             maxLength={64}

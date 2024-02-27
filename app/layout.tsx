@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light">
       <Script src='https://analytics.us.umami.is/script.js' defer data-website-id="5fb46da8-4005-46bb-833f-129b67cd4229">
       {/* <script defer src="https://analytics.us.umami.is/script.js" data-website-id="5fb46da8-4005-46bb-833f-129b67cd4229"></script> */}
       </Script>
