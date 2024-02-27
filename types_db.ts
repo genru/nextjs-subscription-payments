@@ -37,18 +37,35 @@ export type Database = {
           created_at: string
           id: number
           rss: string | null
+          source: string | null
+          userId: string | null
+          uuid: string | null
         }
         Insert: {
           created_at?: string
           id?: number
           rss?: string | null
+          source?: string | null
+          userId?: string | null
+          uuid?: string | null
         }
         Update: {
           created_at?: string
           id?: number
           rss?: string | null
+          source?: string | null
+          userId?: string | null
+          uuid?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "feeds_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       prices: {
         Row: {

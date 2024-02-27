@@ -1,6 +1,7 @@
 import { toDateTime } from '@/utils/helpers';
 import { stripe } from '@/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
+import { randomUUID } from 'crypto';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
 
@@ -284,11 +285,14 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
-const createFeed = async (content: string, uuid: string) => {
+const createFeed = async (content: string, userId: string, source: string) => {
   const feed: TablesInsert<'feeds'> = {
     // id: 1,
     created_at: (new Date()).toISOString(),
-    rss: content
+    rss: content,
+    uuid: randomUUID(),
+    userId: userId,
+    source: source
   }
   const {error: insertError, data: feedData} = await supabaseAdmin.from('feeds').insert(feed);
   if (insertError) {

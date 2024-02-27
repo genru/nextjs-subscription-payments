@@ -1,5 +1,6 @@
 import { parsePlaylist } from "@/utils/playlist/server";
 import { createFeed } from "@/utils/supabase/admin";
+import { createClient } from "@/utils/supabase/server";
 
 export async function parseUrl(dataFrom: FormData) {
     'use server';
@@ -16,8 +17,22 @@ export async function parseUrl(dataFrom: FormData) {
         }
         // resolve(playlist_id);
 
+        const supabase = createClient();
+
+        const {
+          data: { user }
+        } = await supabase.auth.getUser();
+
+        const { data: userDetails } = await supabase
+          .from('users')
+          .select('*')
+          .single();
+        if(!userDetails) {
+            console.warn('No user');
+            return reject(new Error('Invalid url: no user'));
+        }
         const data = await parsePlaylist(playlist_id) || '';
-        const feed = await createFeed(data, '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d');
+        const feed = await createFeed(data, userDetails.id, 'youtube');
         console.log(feed);
         resolve(data);
     })
