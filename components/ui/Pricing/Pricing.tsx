@@ -114,14 +114,14 @@ export default function Pricing({ user, products, subscription }: Props) {
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
             </p>
-            <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
+            <div className="relative self-center mt-6 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
               {intervals.includes('month') && (
                 <button
                   onClick={() => setBillingInterval('month')}
                   type="button"
                   className={`${
                     billingInterval === 'month'
-                      ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
+                      ? 'relative w-1/2 bg-primary border-zinc-800 shadow-sm text-white'
                       : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
                 >
@@ -134,7 +134,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                   type="button"
                   className={`${
                     billingInterval === 'year'
-                      ? 'relative w-1/2 bg-zinc-700 border-zinc-800 shadow-sm text-white'
+                      ? 'relative w-1/2 bg-primary border-zinc-800 shadow-sm text-white'
                       : 'ml-0.5 relative w-1/2 border border-transparent text-zinc-400'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
                 >
@@ -158,9 +158,9 @@ export default function Pricing({ user, products, subscription }: Props) {
                 <div
                   key={product.id}
                   className={cn(
-                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
+                    'flex flex-col rounded-lg shadow-sm divide-y divide-zinc-600 ',
                     {
-                      'border border-pink-500': subscription
+                      'border border-pink-500 bg-base-200': subscription
                         ? product.name === subscription?.prices?.products?.name
                         : product.name === 'Freelancer'
                     },
@@ -170,27 +170,21 @@ export default function Pricing({ user, products, subscription }: Props) {
                   )}
                 >
                   <div className="p-6">
-                    <h2 className="text-2xl font-semibold leading-6 text-white">
+                    <h2 className="text-2xl font-semibold leading-6">
                       {product.name}
                     </h2>
-                    <p className="mt-4 text-zinc-300">{product.description}</p>
+                    <p className="mt-4">{product.description}</p>
                     <p className="mt-8">
                       <span className="text-5xl font-extrabold white">
                         {priceString}
                       </span>
-                      <span className="text-base font-medium text-zinc-100">
+                      <span className="text-base font-medium secondary-content">
                         /{billingInterval}
                       </span>
                     </p>
-                    <Button
-                      variant="slim"
-                      type="button"
-                      loading={priceIdLoading === price.id}
-                      onClick={() => handleStripeCheckout(price)}
-                      className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
-                    >
+                    <button className='d-btn d-btn-primary d-btn-wide'>
                       {subscription ? 'Manage' : 'Subscribe'}
-                    </Button>
+                    </button>
                   </div>
                 </div>
               );
