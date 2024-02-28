@@ -318,7 +318,7 @@ const findFeed = async (feedId: string) => {
   return supabaseAdmin.from('feeds').select("*").eq('uuid', feedId).single();
 }
 
-const uploadMedia = async (fileName: string, body: Readable) => {
+const uploadMedia = async (fileName: string, body: ReadableStream) => {
   // let f: FileBody
 
   return supabaseAdmin.storage.from('media').upload(fileName, body)

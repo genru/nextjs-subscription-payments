@@ -62,17 +62,24 @@ export async function parsePlaylist(playlist_id:string): Promise<Feed> {
         for (const i of resources) {
             const vid = i?.resourceId?.videoId;
             if(vid) {
-                const video =  await ytstream.stream(`https://www.youtube.com/watch?v=${vid}`, {
-                    quality: 'high',
-                    type: 'audio',
-                    highWaterMark: 0,
-                    download: true
-                });
-                console.log(video.video_url);
-                console.log(video.url);
-                const ret = await uploadMedia(vid, video.stream);
-                // ret.data?.path;
-                console.log(ret);
+                try {
+                    const video =  await ytstream.stream(`https://www.youtube.com/watch?v=${vid}`, {
+                        quality: 'high',
+                        type: 'audio',
+                        highWaterMark: 0,
+                        download: true
+                    });
+                    console.log(video.video_url);
+                    console.log(video.url);
+                    const resp = await fetch(video.url);
+                    if (resp.body ){
+                        const ret = await uploadMedia(vid, resp.body);
+                        // ret.data?.path;
+                        console.log(ret);
+                    }
+                } catch (ex) {
+                    console.error(ex);
+                }
             }
             feed.addItem({
                 title: i?.title || '',
