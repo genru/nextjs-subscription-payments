@@ -34,26 +34,38 @@ export type Database = {
       }
       feeds: {
         Row: {
+          author: string | null
+          cover: string | null
           created_at: string
+          description: string | null
           id: number
           rss: string | null
           source: string | null
+          title: string | null
           userId: string | null
           uuid: string | null
         }
         Insert: {
+          author?: string | null
+          cover?: string | null
           created_at?: string
+          description?: string | null
           id?: number
           rss?: string | null
           source?: string | null
+          title?: string | null
           userId?: string | null
           uuid?: string | null
         }
         Update: {
+          author?: string | null
+          cover?: string | null
           created_at?: string
+          description?: string | null
           id?: number
           rss?: string | null
           source?: string | null
+          title?: string | null
           userId?: string | null
           uuid?: string | null
         }

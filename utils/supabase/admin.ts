@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
+import { Feed } from '../playlist/server';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
@@ -285,22 +286,32 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
-const createFeed = async (content: string, userId: string, source: string) => {
+const createFeed = async (content: Feed, userId: string, source: string) => {
   const feed: TablesInsert<'feeds'> = {
     // id: 1,
     created_at: (new Date()).toISOString(),
-    rss: content,
+    rss: content.xml,
+    title: content.title,
+    author: content.author,
+    description: content.description,
+    cover: content.cover,
     uuid: randomUUID(),
     userId: userId,
     source: source
   }
+
   const {error: insertError, data: feedData} = await supabaseAdmin.from('feeds').insert(feed);
   if (insertError) {
     console.warn(insertError, insertError.message);
     console.error(`Feed insert failed: ${insertError}`);
     throw new Error(`Feed insert failed: ${insertError}`)
   }
-  return feedData;
+  console.info(feed, insertError)
+  return feed.uuid;
+}
+
+const findFeed = async (feedId: string) => {
+  return supabaseAdmin.from('feeds').select("*").eq('uuid', feedId).single();
 }
 
 export {
@@ -310,5 +321,6 @@ export {
   deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
-  createFeed
+  createFeed,
+  findFeed
 };

@@ -1,8 +1,14 @@
 import { Podcast } from 'podcast';
 import youtube from "./youtube";
 import { getURL } from '../helpers';
-
-export async function parsePlaylist(playlist_id:string) {
+export interface Feed {
+    title: string,
+    description: string,
+    author: string,
+    cover: string,
+    xml: string
+}
+export async function parsePlaylist(playlist_id:string): Promise<Feed> {
     // youtube.playlists.list()
     const listresp = await youtube.playlists.list({
         part: ["snippet"],
@@ -13,7 +19,8 @@ export async function parsePlaylist(playlist_id:string) {
     })
 
     const i = listresp.data.items?.[0].snippet;
-    // console.info(i)
+    console.info(i)
+    // console.info(i?.thumbnails?.high?.url)
     const hostUrl = getURL();
     const feedUrl = getURL('feed.xml');
     const feed = new Podcast({
@@ -21,7 +28,7 @@ export async function parsePlaylist(playlist_id:string) {
       description: i?.description || '',
       // feedUrl: i?.resourceId?.videoId || '',
       feedUrl: feedUrl,
-      imageUrl: i?.thumbnails?.default?.url || '',
+      imageUrl: i?.thumbnails?.high?.url || '',
       siteUrl: hostUrl,
       author: i?.channelTitle || '',
       categories: ['News', 'Sports'],
@@ -38,7 +45,7 @@ export async function parsePlaylist(playlist_id:string) {
           text: 'Television'
         }]
       }],
-      itunesImage: i?.thumbnails?.default?.url || 'http://example.com/image.png'
+      itunesImage: i?.thumbnails?.high?.url || 'http://example.com/image.png'
     });
 
     const resp = await youtube.playlistItems.list({
@@ -73,9 +80,15 @@ export async function parsePlaylist(playlist_id:string) {
             });
         }
 
-        const xml = feed.buildXml();
-    // console.info(xml);
-        return xml;
     }
+    const xml = feed.buildXml();
+    // console.info(xml);
+    return {
+        title: i?.title || '',
+        description: i?.description || '',
+        author: i?.channelTitle || '',
+        cover: i?.thumbnails?.high?.url || '',
+        xml: xml
+    };
 
 }
