@@ -39,7 +39,7 @@ export async function parseUrl(dataFrom: FormData) {
     try {
         const data = await parsePlaylist(playlist_id) || '';
         const feed = await createFeed(data, userDetails.id, 'youtube');
-        console.log(feed);
+        // console.log(feed);
         return await redirect(`/feeds/${feed}`);
     } catch (err) {
         return null;

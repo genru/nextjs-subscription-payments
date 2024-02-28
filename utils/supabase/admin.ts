@@ -5,6 +5,10 @@ import { randomUUID } from 'crypto';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
 import { Feed } from '../playlist/server';
+// import { Stream } from 'stream';
+import {Stream} from 'yt-stream';
+import { ReadStream } from 'fs';
+import { Readable } from 'stream';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
@@ -314,6 +318,11 @@ const findFeed = async (feedId: string) => {
   return supabaseAdmin.from('feeds').select("*").eq('uuid', feedId).single();
 }
 
+const uploadMedia = async (fileName: string, body: Readable) => {
+  // let f: FileBody
+
+  return supabaseAdmin.storage.from('media').upload(fileName, body)
+}
 export {
   upsertProductRecord,
   upsertPriceRecord,
@@ -322,5 +331,6 @@ export {
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   createFeed,
-  findFeed
+  findFeed,
+  uploadMedia
 };

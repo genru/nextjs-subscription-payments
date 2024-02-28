@@ -1,6 +1,8 @@
 import { Podcast } from 'podcast';
 import youtube from "./youtube";
+import ytstream from 'yt-stream';
 import { getURL } from '../helpers';
+import { uploadMedia } from '../supabase/admin';
 export interface Feed {
     title: string,
     description: string,
@@ -19,7 +21,7 @@ export async function parsePlaylist(playlist_id:string): Promise<Feed> {
     })
 
     const i = listresp.data.items?.[0].snippet;
-    console.info(i)
+    // console.info(i)
     // console.info(i?.thumbnails?.high?.url)
     const hostUrl = getURL();
     const feedUrl = getURL('feed.xml');
@@ -51,32 +53,46 @@ export async function parsePlaylist(playlist_id:string): Promise<Feed> {
     const resp = await youtube.playlistItems.list({
         part: ['snippet', 'id', 'contentDetails'],
         playlistId: playlist_id,
-        maxResults: 10,
+        maxResults: 2,
     });
     const resources = resp.data.items?.map((i) => i.snippet)
-    // console.info(resources)
+    console.info(resources)
     if (resources && resources.length > 0) {
 
         for (const i of resources) {
+            const vid = i?.resourceId?.videoId;
+            if(vid) {
+                const video =  await ytstream.stream(`https://www.youtube.com/watch?v=${vid}`, {
+                    quality: 'high',
+                    type: 'audio',
+                    highWaterMark: 0,
+                    download: true
+                });
+                console.log(video.video_url);
+                console.log(video.url);
+                const ret = await uploadMedia(vid, video.stream);
+                // ret.data?.path;
+                console.log(ret);
+            }
             feed.addItem({
-            title: i?.title || '',
-            description: i?.description || '',
-            url: 'https://cdn.listenbox.app/a/pO_zFgNFmW9.m4a?show_id=Mv8WH2tRjoeO',
-            guid: i?.resourceId?.videoId || '',
-            date: i?.publishedAt || '',
-            author: i?.channelTitle || '',
-            enclosure: {
+                title: i?.title || '',
+                description: i?.description || '',
                 url: 'https://cdn.listenbox.app/a/pO_zFgNFmW9.m4a?show_id=Mv8WH2tRjoeO',
-                type: 'audio/x-m4a',
-                size: 0,
-            },
-            itunesTitle: i?.title || '',
-            itunesAuthor: i?.videoOwnerChannelTitle || 'Max Nowack',
-            itunesExplicit: false,
-            itunesSubtitle: 'I am a sub title',
-            itunesSummary: i?.description || 'I am a summary',
-            itunesDuration: 12345,
-            itunesNewFeedUrl: 'https://newlocation.com/example.rss',
+                guid: i?.resourceId?.videoId || '',
+                date: i?.publishedAt || '',
+                author: i?.channelTitle || '',
+                enclosure: {
+                    url: 'https://cdn.listenbox.app/a/pO_zFgNFmW9.m4a?show_id=Mv8WH2tRjoeO',
+                    type: 'audio/x-m4a',
+                    size: 0,
+                },
+                itunesTitle: i?.title || '',
+                itunesAuthor: i?.videoOwnerChannelTitle || 'Max Nowack',
+                itunesExplicit: false,
+                itunesSubtitle: 'I am a sub title',
+                itunesSummary: i?.description || 'I am a summary',
+                itunesDuration: 12345,
+                itunesNewFeedUrl: 'https://newlocation.com/example.rss',
             });
         }
 
