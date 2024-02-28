@@ -42,7 +42,7 @@ export type Database = {
           rss: string | null
           source: string | null
           title: string | null
-          userId: string | null
+          user_id: string | null
           uuid: string | null
         }
         Insert: {
@@ -54,7 +54,7 @@ export type Database = {
           rss?: string | null
           source?: string | null
           title?: string | null
-          userId?: string | null
+          user_id?: string | null
           uuid?: string | null
         }
         Update: {
@@ -66,13 +66,13 @@ export type Database = {
           rss?: string | null
           source?: string | null
           title?: string | null
-          userId?: string | null
+          user_id?: string | null
           uuid?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "feeds_userId_fkey"
-            columns: ["userId"]
+            foreignKeyName: "feeds_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

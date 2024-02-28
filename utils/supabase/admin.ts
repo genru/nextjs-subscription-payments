@@ -300,7 +300,7 @@ const createFeed = async (content: Feed, userId: string, source: string) => {
     description: content.description,
     cover: content.cover,
     uuid: randomUUID(),
-    userId: userId,
+    user_id: userId,
     source: source
   }
 

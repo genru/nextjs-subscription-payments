@@ -22,7 +22,7 @@ export default async function Feed({params}:{params:{id:string}}) {
 
     const { data: feed, error } = await supabase
       .from('feeds')
-      .select('*').eq('userId', user.id).eq('uuid', params.id)
+      .select('*').eq('user_id', user.id).eq('uuid', params.id)
       .maybeSingle();
 
     if (error) {

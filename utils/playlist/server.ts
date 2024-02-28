@@ -61,7 +61,7 @@ export async function parsePlaylist(playlist_id:string): Promise<Feed> {
 
         for (const i of resources) {
             const vid = i?.resourceId?.videoId;
-            if(vid) {
+            if(vid && false) {
                 const video =  await ytstream.stream(`https://www.youtube.com/watch?v=${vid}`, {
                     quality: 'high',
                     type: 'audio',

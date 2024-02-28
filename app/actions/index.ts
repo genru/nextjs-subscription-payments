@@ -1,8 +1,7 @@
 import { parsePlaylist } from "@/utils/playlist/server";
 import { createFeed } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-
+import { RedirectType, redirect, useRouter } from 'next/navigation';
 export async function parseUrl(dataFrom: FormData) {
     'use server';
     // console.log(dataFrom);
@@ -36,12 +35,17 @@ export async function parseUrl(dataFrom: FormData) {
         console.warn('No user');
         throw (new Error('Invalid url: no user'));
     }
+    let feed;
     try {
         const data = await parsePlaylist(playlist_id) || '';
-        const feed = await createFeed(data, userDetails.id, 'youtube');
+        feed = await createFeed(data, userDetails.id, 'youtube');
         // console.log(feed);
-        return await redirect(`/feeds/${feed}`);
+        // const router = useRouter()
+        // router.push(`/feeds/${feed}`)
+
     } catch (err) {
+        console.error(err)
         return null;
     }
+    redirect(`/feeds/${feed}`, RedirectType.push);
 }
