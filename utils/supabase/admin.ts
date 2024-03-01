@@ -324,7 +324,7 @@ const uploadMedia = async (fileName: string, body: ReadableStream) => {
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
 
-const createMedia = async (fileName: string, body: ReadableStream, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
+const createMedia = async (fileName: string, body: ArrayBuffer, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
 
   const { error: uploadError, data: mediaData } = await supabaseAdmin.storage
     .from('media')
