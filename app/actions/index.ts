@@ -1,7 +1,10 @@
-import { parsePlaylist } from "@/utils/playlist/server";
-import { createFeed } from "@/utils/supabase/admin";
+import { Feed, parsePlaylist } from "@/utils/playlist/server";
+import { createFeed, createMedia } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
-import { RedirectType, redirect, useRouter } from 'next/navigation';
+import { RedirectType, redirect } from 'next/navigation';
+import { Podcast } from "podcast";
+import ytstream from 'yt-stream';
+
 export async function parseUrl(dataFrom: FormData) {
     'use server';
     // console.log(dataFrom);
@@ -37,12 +40,45 @@ export async function parseUrl(dataFrom: FormData) {
     }
     let feed;
     try {
-        const data = await parsePlaylist(playlist_id) || '';
-        feed = await createFeed(data, userDetails.id, 'youtube');
-        // console.log(feed);
-        // const router = useRouter()
-        // router.push(`/feeds/${feed}`)
+        const pod: Podcast = await parsePlaylist(playlist_id) || '';
 
+        const feedRaw: Feed = {
+            title: pod.feed.title,
+            description: pod.feed.description || '',
+            cover: pod.feed.imageUrl || '',
+            author: pod.feed.author || 'unknown',
+            xml: pod.buildXml()
+        };
+
+        const feed_uuid = await createFeed(feedRaw, userDetails.id, 'youtube');
+        if(feed_uuid) {
+            for (const item of pod.items) {
+                try {
+                    const video =  await ytstream.stream(`https://www.youtube.com/watch?v=${item.guid}`, {
+                        quality: 'high',
+                        type: 'audio',
+                        highWaterMark: 0,
+                        download: true
+                    });
+                    console.log(video.video_url);
+                    console.log(video.url);
+                    const resp = await fetch(video.url);
+                    if (resp.body ){
+                        const ret = await createMedia(item.guid, resp.body, {
+                            feed_id: feed_uuid,
+                            title: item.title,
+                            description: item.description,
+                            cover: item.imageUrl || '',
+                            author: item.author || 'unknown',
+                            source: 'youtube'
+                        });
+                        console.log(ret);
+                    }
+                } catch (ex) {
+                    console.error(ex);
+                }
+            }
+        }
     } catch (err) {
         console.error(err)
         return null;

@@ -2,7 +2,7 @@ import { Podcast } from 'podcast';
 import youtube from "./youtube";
 import ytstream from 'yt-stream';
 import { getURL } from '../helpers';
-import { uploadMedia } from '../supabase/admin';
+import { createFeed, createMedia, uploadMedia } from '../supabase/admin';
 export interface Feed {
     title: string,
     description: string,
@@ -10,7 +10,7 @@ export interface Feed {
     cover: string,
     xml: string
 }
-export async function parsePlaylist(playlist_id:string): Promise<Feed> {
+export async function parsePlaylist(playlist_id:string): Promise<Podcast> {
     // youtube.playlists.list()
     const listresp = await youtube.playlists.list({
         part: ["snippet"],
@@ -50,37 +50,20 @@ export async function parsePlaylist(playlist_id:string): Promise<Feed> {
       itunesImage: i?.thumbnails?.high?.url || 'http://example.com/image.png'
     });
 
+
+    // feed = await createFeed(data, userDetails.id, 'youtube');
+
     const resp = await youtube.playlistItems.list({
         part: ['snippet', 'id', 'contentDetails'],
         playlistId: playlist_id,
         maxResults: 2,
     });
     const resources = resp.data.items?.map((i) => i.snippet)
-    console.info(resources)
+    // console.info(resources)
     if (resources && resources.length > 0) {
 
         for (const i of resources) {
-            const vid = i?.resourceId?.videoId;
-            if(vid) {
-                try {
-                    const video =  await ytstream.stream(`https://www.youtube.com/watch?v=${vid}`, {
-                        quality: 'high',
-                        type: 'audio',
-                        highWaterMark: 0,
-                        download: true
-                    });
-                    console.log(video.video_url);
-                    console.log(video.url);
-                    const resp = await fetch(video.url);
-                    if (resp.body ){
-                        const ret = await uploadMedia(vid, resp.body);
-                        // ret.data?.path;
-                        console.log(ret);
-                    }
-                } catch (ex) {
-                    console.error(ex);
-                }
-            }
+            // const vid = i?.resourceId?.videoId;
             feed.addItem({
                 title: i?.title || '',
                 description: i?.description || '',
@@ -104,14 +87,15 @@ export async function parsePlaylist(playlist_id:string): Promise<Feed> {
         }
 
     }
-    const xml = feed.buildXml();
-    // console.info(xml);
-    return {
-        title: i?.title || '',
-        description: i?.description || '',
-        author: i?.channelTitle || '',
-        cover: i?.thumbnails?.high?.url || '',
-        xml: xml
-    };
+    return feed;
+    // const xml = feed.buildXml();
+    // // console.info(xml);
+    // return {
+    //     title: i?.title || '',
+    //     description: i?.description || '',
+    //     author: i?.channelTitle || '',
+    //     cover: i?.thumbnails?.high?.url || '',
+    //     xml: xml
+    // };
 
 }

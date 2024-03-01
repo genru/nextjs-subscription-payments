@@ -323,6 +323,47 @@ const uploadMedia = async (fileName: string, body: ReadableStream) => {
 
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
+
+const createMedia = async (fileName: string, body: ReadableStream, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
+
+  const { error: uploadError, data: mediaData } = await supabaseAdmin.storage
+    .from('media')
+    .upload(fileName, body);
+
+  if (uploadError) {
+    console.warn(uploadError, uploadError.message);
+    console.error(`Media upload failed: ${uploadError}`);
+    throw new Error(`Media upload failed: ${uploadError}`);
+  }
+
+  const mediaObj: TablesInsert<'media'> = {
+    title: media.title,
+    author: media.author,
+    description: media.description,
+    source: media.source,
+    url: mediaData.path
+    // cover: media.cover
+  }
+  const {error, data: mediaRow} = await supabaseAdmin.from('media').insert(mediaObj).select();
+
+  if (error || mediaRow==null) {
+    console.warn(error, error && error.message);
+    console.error(`Media insert failed: ${error}`);
+    throw new Error(`Media insert failed: ${error}`);
+  }
+
+  const feed_media: TablesInsert<'feedMedia'> = {
+    feed_id: media.feed_id,
+    media_id: mediaRow[0].id
+  }
+  const {error: feedMediaError} = await supabaseAdmin.from('feedMedia').insert(feed_media);
+  if (feedMediaError) {
+    console.warn(feedMediaError, feedMediaError.message);
+    console.error(`FeedMedia insert failed: ${feedMediaError}`);
+    throw new Error(`FeedMedia insert failed: ${feedMediaError}`);
+  }
+}
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
@@ -332,5 +373,6 @@ export {
   manageSubscriptionStatusChange,
   createFeed,
   findFeed,
-  uploadMedia
+  uploadMedia,
+  createMedia
 };
