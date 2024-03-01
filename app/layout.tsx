@@ -8,8 +8,8 @@ import 'styles/main.css';
 import Script from 'next/script';
 
 const meta = {
-  title: 'Next.js Subscription Starter',
-  description: 'Brought to you by Vercel, Stripe, and Supabase.',
+  title: 'Poddiy DIY your podcast in 10 seconds',
+  description: 'Poddiy make youtube into podcast effortlessly, listen youtube channels in your podcast',
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
