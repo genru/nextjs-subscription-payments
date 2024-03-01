@@ -32,6 +32,39 @@ export type Database = {
           },
         ]
       }
+      feedMedia: {
+        Row: {
+          feed_id: string
+          id: number
+          media_id: string
+        }
+        Insert: {
+          feed_id: string
+          id?: number
+          media_id: string
+        }
+        Update: {
+          feed_id?: string
+          id?: number
+          media_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_feedMedia_feed_id_fkey"
+            columns: ["feed_id"]
+            isOneToOne: false
+            referencedRelation: "feeds"
+            referencedColumns: ["uuid"]
+          },
+          {
+            foreignKeyName: "public_feedMedia_media_id_fkey"
+            columns: ["media_id"]
+            isOneToOne: false
+            referencedRelation: "media"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feeds: {
         Row: {
           author: string | null
@@ -43,7 +76,7 @@ export type Database = {
           source: string | null
           title: string | null
           user_id: string | null
-          uuid: string | null
+          uuid: string
         }
         Insert: {
           author?: string | null
@@ -55,7 +88,7 @@ export type Database = {
           source?: string | null
           title?: string | null
           user_id?: string | null
-          uuid?: string | null
+          uuid?: string
         }
         Update: {
           author?: string | null
@@ -67,17 +100,47 @@ export type Database = {
           source?: string | null
           title?: string | null
           user_id?: string | null
-          uuid?: string | null
+          uuid?: string
         }
         Relationships: [
           {
-            foreignKeyName: "feeds_user_id_fkey"
+            foreignKeyName: "public_feeds_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
+      }
+      media: {
+        Row: {
+          author: string | null
+          created_at: string
+          description: string | null
+          id: string
+          source: string | null
+          title: string | null
+          url: string
+        }
+        Insert: {
+          author?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          source?: string | null
+          title?: string | null
+          url: string
+        }
+        Update: {
+          author?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          source?: string | null
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
       }
       prices: {
         Row: {
