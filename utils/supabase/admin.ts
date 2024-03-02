@@ -6,9 +6,8 @@ import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
 import { Feed } from '../playlist/server';
 // import { Stream } from 'stream';
-import {Stream} from 'yt-stream';
-import { ReadStream } from 'fs';
 import { Readable } from 'stream';
+import { getPreSignedUrl, uploadStorage } from '../playlist/aws';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
@@ -324,24 +323,25 @@ const uploadMedia = async (fileName: string, body: ReadableStream) => {
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
 
-const createMedia = async (fileName: string, body: ArrayBuffer, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
+const createMedia = async (fileName: string, body: Readable, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
 
-  const { error: uploadError, data: mediaData } = await supabaseAdmin.storage
-    .from('media')
-    .upload(fileName, body);
-
-  if (uploadError) {
-    console.warn(uploadError, uploadError.message);
-    console.error(`Media upload failed: ${uploadError}`);
-    throw new Error(`Media upload failed: ${uploadError}`);
-  }
+  // const { error: uploadError, data: mediaData } = await supabaseAdmin.storage
+  //   .from('media')
+  //   .upload(fileName, body);
+  await uploadStorage(fileName, body)
+  const mediaUrl = await getPreSignedUrl(fileName);
+  // if (uploadError) {
+  //   console.warn(uploadError, uploadError.message);
+  //   console.error(`Media upload failed: ${uploadError}`);
+  //   throw new Error(`Media upload failed: ${uploadError}`);
+  // }
 
   const mediaObj: TablesInsert<'media'> = {
     title: media.title,
     author: media.author,
     description: media.description,
     source: media.source,
-    url: mediaData.path
+    url: mediaUrl
     // cover: media.cover
   }
   const {error, data: mediaRow} = await supabaseAdmin.from('media').insert(mediaObj).select();

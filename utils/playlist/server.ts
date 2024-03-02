@@ -1,8 +1,6 @@
 import { Podcast } from 'podcast';
 import youtube from "./youtube";
-import ytstream from 'yt-stream';
 import { getURL } from '../helpers';
-import { createFeed, createMedia, uploadMedia } from '../supabase/admin';
 export interface Feed {
     title: string,
     description: string,
@@ -88,14 +86,4 @@ export async function parsePlaylist(playlist_id:string): Promise<Podcast> {
 
     }
     return feed;
-    // const xml = feed.buildXml();
-    // // console.info(xml);
-    // return {
-    //     title: i?.title || '',
-    //     description: i?.description || '',
-    //     author: i?.channelTitle || '',
-    //     cover: i?.thumbnails?.high?.url || '',
-    //     xml: xml
-    // };
-
 }
