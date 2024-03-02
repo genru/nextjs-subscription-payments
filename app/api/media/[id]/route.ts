@@ -10,6 +10,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     });
 
     console.log('streaming', id);
+    console.log(video.url);
     const resp = await fetch(video.url);
     const ret = new Response(resp.body, { headers: {"content-type": 'audio/mpeg' }});
     return ret;

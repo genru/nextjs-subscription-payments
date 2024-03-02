@@ -38,7 +38,7 @@ export async function parseUrl(dataFrom: FormData) {
         console.warn('No user');
         throw (new Error('Invalid url: no user'));
     }
-    let feed;
+    let feed_uuid;
     try {
         const pod: Podcast = await parsePlaylist(playlist_id) || '';
 
@@ -50,7 +50,7 @@ export async function parseUrl(dataFrom: FormData) {
             xml: pod.buildXml()
         };
 
-        const feed_uuid = await createFeed(feedRaw, userDetails.id, 'youtube');
+        feed_uuid = await createFeed(feedRaw, userDetails.id, 'youtube');
         if(feed_uuid) {
             for (const item of pod.items) {
                 try {
@@ -83,5 +83,5 @@ export async function parseUrl(dataFrom: FormData) {
         console.error(err)
         return null;
     }
-    redirect(`/feeds/${feed}`, RedirectType.push);
+    redirect(`/feeds/${feed_uuid}`, RedirectType.push);
 }
