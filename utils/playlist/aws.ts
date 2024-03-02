@@ -10,7 +10,7 @@ process.env["S3_API_SECRET_ACCESS_KEY"] || new AssertionError({message: 'S3_API_
 
 const s3 = new S3Client({
     region: process.env.S3_API_REGION_NAME || "",
-    endpoint: 'https://s3.us-west-1.amazonaws.com',
+    endpoint: `https://s3.${process.env.S3_API_REGION_NAME}.amazonaws.com`,
     credentials: {
         accessKeyId: process.env['S3_API_ACCESS_KEY_ID'] || "",
         secretAccessKey: process.env['S3_API_SECRET_ACCESS_KEY'] || ""
