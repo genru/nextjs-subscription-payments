@@ -1,4 +1,4 @@
-import { toDateTime } from '@/utils/helpers';
+import { getURL, toDateTime } from '@/utils/helpers';
 import { stripe } from '@/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
@@ -323,19 +323,20 @@ const uploadMedia = async (fileName: string, body: ReadableStream) => {
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
 
-const createMedia = async (fileName: string, body: ReadableStream, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
+const createMedia = async (fileName: string, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
 
   // const { error: uploadError, data: mediaData } = await supabaseAdmin.storage
   //   .from('media')
   //   .upload(fileName, body);
-  await uploadStorage(fileName, body)
-  const mediaUrl = await getPreSignedUrl(fileName);
+  // await uploadStorage(fileName, body)
+  // const mediaUrl = await getPreSignedUrl(fileName);
   // if (uploadError) {
   //   console.warn(uploadError, uploadError.message);
   //   console.error(`Media upload failed: ${uploadError}`);
   //   throw new Error(`Media upload failed: ${uploadError}`);
   // }
 
+  const mediaUrl = getURL('api/media/' + fileName);
   const mediaObj: TablesInsert<'media'> = {
     title: media.title,
     author: media.author,
