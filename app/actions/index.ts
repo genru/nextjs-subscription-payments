@@ -1,6 +1,7 @@
 import { Feed, parsePlaylist } from "@/utils/playlist/server";
 import { createFeed, createMedia } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
+import { createWriteStream, readFileSync } from "fs";
 import { RedirectType, redirect } from 'next/navigation';
 import { Podcast } from "podcast";
 import ytstream from 'yt-stream';
@@ -64,7 +65,13 @@ export async function parseUrl(dataFrom: FormData) {
                     console.log(video.url);
                     // const resp = await fetch(video.url);
                     if (video){
-                        const ret = await createMedia(item.guid, video.stream, {
+                        const ws = await video.stream.pipe(createWriteStream(item.guid));
+                        ws.on('close', () =>{
+                            console.info('write done');
+                        });
+                        const f = readFileSync(item.guid);
+                        console.info('start uploading')
+                        const ret = await createMedia(item.guid, f, {
                             feed_id: feed_uuid,
                             title: item.title,
                             description: item.description,

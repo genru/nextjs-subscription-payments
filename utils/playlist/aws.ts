@@ -24,7 +24,7 @@ export function getPreSignedUrl(key: string, expiresIn?: number): Promise<string
     }), { expiresIn: expiresIn });
 }
 
-export function uploadStorage(key: string, stream: Readable) {
+export function uploadStorage(key: string, stream: Readable|Buffer) {
     return s3.send(new PutObjectCommand({
         Bucket: 'poddiy',
         Key: key,
