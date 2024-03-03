@@ -323,20 +323,21 @@ const uploadMedia = async (fileName: string, body: ReadableStream) => {
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
 
-const createMedia = async (fileName: string, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
+const createMedia = async (fileName: string, body: Readable, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
 
   // const { error: uploadError, data: mediaData } = await supabaseAdmin.storage
   //   .from('media')
   //   .upload(fileName, body);
-  // await uploadStorage(fileName, body)
-  // const mediaUrl = await getPreSignedUrl(fileName);
+  await uploadStorage(fileName, body)
+  const mediaUrl = await getPreSignedUrl(fileName);
+  console.info('upload done',mediaUrl)
   // if (uploadError) {
   //   console.warn(uploadError, uploadError.message);
   //   console.error(`Media upload failed: ${uploadError}`);
   //   throw new Error(`Media upload failed: ${uploadError}`);
   // }
 
-  const mediaUrl = getURL('api/media/' + fileName);
+  // const mediaUrl = getURL('api/media/' + fileName);
   const mediaObj: TablesInsert<'media'> = {
     title: media.title,
     author: media.author,

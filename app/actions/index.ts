@@ -64,7 +64,7 @@ export async function parseUrl(dataFrom: FormData) {
                     console.log(video.url);
                     // const resp = await fetch(video.url);
                     if (video){
-                        const ret = await createMedia(item.guid, {
+                        const ret = await createMedia(item.guid, video.stream, {
                             feed_id: feed_uuid,
                             title: item.title,
                             description: item.description,
