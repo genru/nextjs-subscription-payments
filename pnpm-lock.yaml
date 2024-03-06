@@ -65,9 +65,6 @@ dependencies:
   tailwindcss-animate:
     specifier: ^1.0.7
     version: 1.0.7(tailwindcss@3.4.1)
-  yt-stream:
-    specifier: ^1.4.13
-    version: 1.4.13
 
 devDependencies:
   '@types/node':
@@ -4785,7 +4782,3 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  /yt-stream@1.4.13:
-    resolution: {integrity: sha512-czuYAZNLUAo9Mx6ZZ4ECelWDSH8XR5zg/e09H3yrzc9Bs7DoxceCAI8sd5ef5BCZIxb4mLU7dlA1BQT5UB9q/A==}
-    dev: false

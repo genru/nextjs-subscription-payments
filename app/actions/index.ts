@@ -2,11 +2,8 @@ import { processYoutubeMediaUrl } from "@/utils/playlist/aws";
 import { Feed, parsePlaylist } from "@/utils/playlist/server";
 import { createFeed, createMedia } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
-import { createWriteStream, readFileSync } from "fs";
 import { RedirectType, redirect } from 'next/navigation';
 import { Podcast } from "podcast";
-import { Stream } from "stream";
-import ytstream from 'yt-stream';
 
 export async function parseUrl(dataFrom: FormData) {
     'use server';
