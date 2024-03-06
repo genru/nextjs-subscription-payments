@@ -38,8 +38,13 @@ export function processYoutubeMediaUrl(id: string, feedId: string, mediaId: stri
     if (!url) {
         throw new Error('AWS_YOUTUBE_DOWNLOADER_URL must be specified');
     }
+    const webhookHost = process.env["AWS_YOUTUBE_DOWNLOADER_WEBHOOK_HOST"];
+    if (!webhookHost) {
+        throw new Error('AWS_YOUTUBE_DOWNLOADER_WEBHOOK_HOST must be specified');
+    }
+    const event = {mediaId: mediaId, feedId: feedId, id:id, webhookHost: webhookHost}
     return fetch(url, {
         method: 'POST',
-        body:JSON.stringify({mediaId: mediaId, feedId: feedId, id:id, webhookHost: '1f4a-42-3-25-12.ngrok-free.app'})
+        body:JSON.stringify(event)
     })
 }
