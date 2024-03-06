@@ -104,7 +104,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "public_feeds_user_id_fkey"
+            foreignKeyName: "feeds_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -120,7 +120,7 @@ export type Database = {
           id: string
           source: string | null
           title: string | null
-          url: string
+          url: string | null
         }
         Insert: {
           author?: string | null
@@ -129,7 +129,7 @@ export type Database = {
           id?: string
           source?: string | null
           title?: string | null
-          url: string
+          url?: string | null
         }
         Update: {
           author?: string | null
@@ -138,7 +138,7 @@ export type Database = {
           id?: string
           source?: string | null
           title?: string | null
-          url?: string
+          url?: string | null
         }
         Relationships: []
       }

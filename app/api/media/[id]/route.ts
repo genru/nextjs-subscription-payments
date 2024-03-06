@@ -1,17 +1,16 @@
-import ytstream from 'yt-stream';
+import { updateMediaWithUrl } from "@/utils/supabase/admin";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-    const id = params.id;
-    const video =  await ytstream.stream(`https://www.youtube.com/watch?v=${id}`, {
-        quality: 'high',
-        type: 'audio',
-        highWaterMark: 0,
-        download: true
-    });
+export async function POST(request: Request, { params }: { params: { id: string } }) {
 
-    console.log('streaming', id);
-    console.log(video.url);
-    const resp = await fetch(video.url);
-    const ret = new Response(resp.body, { headers: {"content-type": 'audio/mpeg' }});
-    return ret;
+    try {
+        const body = await request.json();
+        console.log(body);
+        const {url} = body;
+        if (url) {
+            await updateMediaWithUrl(url, params.id)
+        }
+    } catch (err) {
+        console.log(err);
+    }
+    return Response.json({code: 0, message: 'successful'});
 }

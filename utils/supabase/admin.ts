@@ -323,19 +323,7 @@ const uploadMedia = async (fileName: string, body: ReadableStream) => {
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
 
-const createMedia = async (fileName: string, body: Readable|Buffer, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
-
-  // const { error: uploadError, data: mediaData } = await supabaseAdmin.storage
-  //   .from('media')
-  //   .upload(fileName, body);
-  await uploadStorage(fileName, body)
-  const mediaUrl = await getPreSignedUrl(fileName);
-  console.info('upload done',mediaUrl)
-  // if (uploadError) {
-  //   console.warn(uploadError, uploadError.message);
-  //   console.error(`Media upload failed: ${uploadError}`);
-  //   throw new Error(`Media upload failed: ${uploadError}`);
-  // }
+const createMedia = async (fileName: string, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
 
   // const mediaUrl = getURL('api/media/' + fileName);
   const mediaObj: TablesInsert<'media'> = {
@@ -343,14 +331,14 @@ const createMedia = async (fileName: string, body: Readable|Buffer, media: {feed
     author: media.author,
     description: media.description,
     source: media.source,
-    url: mediaUrl
+    // url: mediaUrl
     // cover: media.cover
   }
   const {error, data: mediaRow} = await supabaseAdmin.from('media').insert(mediaObj).select();
 
   if (error || mediaRow==null) {
     console.warn(error, error && error.message);
-    console.error(`Media insert failed: ${error}`);
+    console.error(`Media insert failed:`, error);
     throw new Error(`Media insert failed: ${error}`);
   }
 
@@ -364,6 +352,18 @@ const createMedia = async (fileName: string, body: Readable|Buffer, media: {feed
     console.error(`FeedMedia insert failed: ${feedMediaError}`);
     throw new Error(`FeedMedia insert failed: ${feedMediaError}`);
   }
+
+  return mediaRow[0].id;
+}
+
+const updateMediaWithUrl = async (url: string, uuid: string) => {
+  const {data, error} = await supabaseAdmin.from('media').update({url: url, id: uuid}).eq('id', uuid).select();
+  if (error) {
+    console.warn(error, error && error.message);
+    console.error(`Media update failed: `, error);
+    throw new Error(`Media update failed: ${error}`);
+  }
+  // console.log(data);
 }
 
 export {
@@ -376,5 +376,6 @@ export {
   createFeed,
   findFeed,
   uploadMedia,
-  createMedia
+  createMedia,
+  updateMediaWithUrl
 };
