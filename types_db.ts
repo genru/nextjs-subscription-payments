@@ -117,6 +117,7 @@ export type Database = {
           author: string | null
           created_at: string
           description: string | null
+          guid: string | null
           id: string
           source: string | null
           title: string | null
@@ -126,6 +127,7 @@ export type Database = {
           author?: string | null
           created_at?: string
           description?: string | null
+          guid?: string | null
           id?: string
           source?: string | null
           title?: string | null
@@ -135,6 +137,7 @@ export type Database = {
           author?: string | null
           created_at?: string
           description?: string | null
+          guid?: string | null
           id?: string
           source?: string | null
           title?: string | null

@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
 import Stripe from 'stripe';
 import type { Database, Tables, TablesInsert } from 'types_db';
-import { Feed } from '../playlist/server';
+import { FeedInfo } from '../playlist/server';
 // import { Stream } from 'stream';
 
 type Product = Tables<'products'>;
@@ -287,7 +287,7 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
-const createFeed = async (content: Feed, userId: string, source: string) => {
+const createFeed = async (content: FeedInfo, userId: string, source: string) => {
   const feed: TablesInsert<'feeds'> = {
     // id: 1,
     created_at: (new Date()).toISOString(),
@@ -315,13 +315,18 @@ const findFeed = async (feedId: string) => {
   return supabaseAdmin.from('feeds').select("*").eq('uuid', feedId).single();
 }
 
+const updateFeedWithXml = async (feedId: string, feedXml: string) => {
+  const {error, data: feedData} = await supabaseAdmin.from('feeds').update({rss: feedXml}).eq('uuid', feedId).single();
+  return feedData;
+}
+
 const uploadMedia = async (fileName: string, body: ReadableStream) => {
   // let f: FileBody
 
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
 
-const createMedia = async (fileName: string, media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string}) => {
+const createMedia = async (media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string, guid: string}) => {
 
   // const mediaUrl = getURL('api/media/' + fileName);
   const mediaObj: TablesInsert<'media'> = {
@@ -329,6 +334,7 @@ const createMedia = async (fileName: string, media: {feed_id:string,title: strin
     author: media.author,
     description: media.description,
     source: media.source,
+    guid: media.guid
     // url: mediaUrl
     // cover: media.cover
   }
@@ -364,6 +370,26 @@ const updateMediaWithUrl = async (url: string, uuid: string) => {
   // console.log(data);
 }
 
+const findFeedMedia = async (feedId: string) => {
+  const {data: mediaIds, error} = await supabaseAdmin.from('feedMedia').select('media_id').eq('feed_id', feedId);
+  if (error) {
+    console.warn(error, error && error.message);
+    // console.error(`FeedMedia lookup failed: ${error}`);
+    throw new Error(`FeedMedia lookup failed`);
+  }
+  console.log(mediaIds);
+  const {data: medias, error: mediaError} = await supabaseAdmin.from('media').select("*").in('id', mediaIds);
+  if (mediaError) {
+    console.warn(mediaError, mediaError && mediaError.message);
+    // console.error(`Media lookup failed: ${mediaError}`);
+    throw new Error(`Media lookup failed:`);
+  }
+  console.log(medias);
+
+  return medias;
+  // return supabaseAdmin.from('media').select("*");
+}
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
@@ -375,5 +401,7 @@ export {
   findFeed,
   uploadMedia,
   createMedia,
-  updateMediaWithUrl
+  updateMediaWithUrl,
+  findFeedMedia,
+  updateFeedWithXml
 };

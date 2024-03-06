@@ -33,13 +33,13 @@ export function uploadStorage(key: string, stream: Readable|Buffer) {
     }));
 }
 
-export function processYoutubeMediaUrl(id: string, mediaId: string) {
+export function processYoutubeMediaUrl(id: string, feedId: string, mediaId: string) {
     const url = process.env["AWS_YOUTUBE_DOWNLOADER_URL"];
     if (!url) {
         throw new Error('AWS_YOUTUBE_DOWNLOADER_URL must be specified');
     }
     return fetch(url, {
         method: 'POST',
-        body:JSON.stringify({uuid: mediaId, id:id})
+        body:JSON.stringify({mediaId: mediaId, feedId: feedId, id:id, webhookHost: '1f4a-42-3-25-12.ngrok-free.app'})
     })
 }
