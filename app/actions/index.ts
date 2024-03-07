@@ -55,10 +55,11 @@ export async function parseUrl(dataFrom: FormData) {
 
         feed_uuid = await createFeed(feedRaw, userDetails.id, 'youtube');
         if(feed_uuid) {
-            await redis.set(`pod:${feed_uuid}`, JSON.stringify(pod), 'EX', 180);
+            const podKey = `pod:${feed_uuid}`;
+            const itemsKey = `items:${feed_uuid}`;
+            await redis.set(podKey, JSON.stringify(pod), 'EX', 180);
             for (const item of pod.items) {
                 try {
-                    // console.info('start uploading')
                     const media_id = await createMedia({
                         feed_id: feed_uuid,
                         title: item.title,
@@ -68,17 +69,9 @@ export async function parseUrl(dataFrom: FormData) {
                         source: 'youtube',
                         guid: item.guid
                     });
-                    // console.log(media_id, 'saved');
-                    processYoutubeMediaUrl(item.guid, feed_uuid, media_id).then(async resp => {
-                        if(resp.status !== 200) {
-                            console.warn(media_id,resp.status, resp.statusText)
-                            return;
-                        }
-                        await redis.sadd(`items:${feed_uuid}`, media_id);
-                        await redis.expire(`items:${feed_uuid}`, 60 * 3);
-                        // return resp.json();
-                    }).catch(console.error);
-                    // console.info('added media', media_id)
+                    await redis.sadd(itemsKey, media_id);
+                    await redis.expire(itemsKey, 60 * 3);
+                    processYoutubeMediaUrl(item.guid, feed_uuid, media_id).catch(console.error);
                 } catch (ex) {
                     console.error(ex);
                 }

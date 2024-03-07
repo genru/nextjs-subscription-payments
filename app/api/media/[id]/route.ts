@@ -16,12 +16,10 @@ export async function POST(request: Request, { params }: { params: { id: string 
         const {url, feedId, guid} = body;
         const key = `items:${feedId}`;
         const exist = (1===await redis.exists(key));
-        console.log('exists', exist);
         if(!exist || !url) {
             return new Response();
         }
         const ismember = (1===await redis.sismember(key, mediaId));
-        console.log('mediaId', ismember)
         if(!ismember) {
             return new Response();
         }

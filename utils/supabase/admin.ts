@@ -307,7 +307,6 @@ const createFeed = async (content: FeedInfo, userId: string, source: string) => 
     console.error(`Feed insert failed: ${insertError}`);
     throw new Error(`Feed insert failed: ${insertError}`)
   }
-  console.info(feed, insertError)
   return feed.uuid;
 }
 
