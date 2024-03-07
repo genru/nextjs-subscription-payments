@@ -89,7 +89,7 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
     const resp = await youtube.playlistItems.list({
         part: ['snippet', 'id', 'contentDetails'],
         playlistId: playlist_id,
-        maxResults: 10,
+        maxResults: 2,
     });
     const resources = resp.data.items?.map((i) => i.snippet)
     // console.info(resources)
