@@ -12,21 +12,24 @@ export async function POST(request: Request, { params }: { params: { id: string 
     try {
         const body = await request.json();
         const mediaId = params.id;
-        // console.log({...body, mediaId});
+        console.log({...body, mediaId});
         const {url, feedId, guid} = body;
         const key = `items:${feedId}`;
         const exist = (1===await redis.exists(key));
+        console.log('exists', exist);
         if(!exist || !url) {
             return new Response();
         }
-        const ismenber = (1===await redis.sismember(key, mediaId));
-        if(!ismenber) {
+        const ismember = (1===await redis.sismember(key, mediaId));
+        console.log('mediaId', ismember)
+        if(!ismember) {
             return new Response();
         }
         await updateMediaWithUrl(url, mediaId)
         await updateMediaUrlInCache(feedId, url, guid)
         await redis.srem(key, mediaId);
         const cnt = await redis.scard(key);
+        console.log('cnt', cnt);
         if(cnt === 0) {
             // no more media expected
             await redis.del(key);
