@@ -1,11 +1,8 @@
-import { createClient } from "@/utils/supabase/client";
-import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET(request: Request,{ params }: { params: { id: string } }) {
 
-  const { searchParams } = new URL(request.url)
   console.log(params.id);
-  console.log(searchParams);
   const supabase = await createClient();
 
 
@@ -16,7 +13,6 @@ export async function GET(request: Request,{ params }: { params: { id: string } 
 
   if (error) {
     console.log(error);
-    // return Response.error({status: 404})
     return new Response(null, {status: 404});
   }
 
