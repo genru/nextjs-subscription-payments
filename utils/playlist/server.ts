@@ -52,7 +52,7 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
                 text: 'Television'
             }]
         }],
-        itunesImage: i?.thumbnails?.high?.url || 'http://example.com/image.png',
+        itunesImage: i?.thumbnails?.high?.url || 'https://pub-864077fe49bd4dcc9c269108cb2dbbe3.r2.dev/itunes-default-thumbnail.png',
         customNamespaces: {},
         customElements: []
     }
@@ -108,6 +108,7 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
                     type: 'audio/x-m4a',
                     size: 0,
                 },
+                itunesImage: i?.thumbnails?.high?.url || 'https://pub-864077fe49bd4dcc9c269108cb2dbbe3.r2.dev/itunes-default-thumbnail.png',
                 itunesTitle: i?.title || '',
                 itunesAuthor: i?.videoOwnerChannelTitle || 'Max Nowack',
                 itunesExplicit: false,
