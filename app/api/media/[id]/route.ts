@@ -1,3 +1,4 @@
+import { getPreSignedUrl } from "@/utils/playlist/aws";
 import { PodInfo } from "@/utils/playlist/server";
 import { updateFeedWithXml, updateMediaWithUrl } from "@/utils/supabase/admin";
 import assert from "assert";
@@ -16,15 +17,17 @@ export async function POST(request: Request, { params }: { params: { id: string 
         const {url, feedId, guid} = body;
         const key = `items:${feedId}`;
         const exist = (1===await redis.exists(key));
-        if(!exist || !url) {
+        if(!exist) {
             return new Response();
         }
         const ismember = (1===await redis.sismember(key, mediaId));
         if(!ismember) {
             return new Response();
         }
-        await updateMediaWithUrl(url, mediaId)
-        await updateMediaUrlInCache(feedId, url, guid)
+        // const urlNew = await getPreSignedUrl(guid, 24 * 3600 * 7)
+        const urlNew = `https://pub-0d979674586542a19e779286f94d5375.r2.dev/6R2UhhsabTc/${guid}`
+        await updateMediaWithUrl(urlNew, mediaId)
+        await updateMediaUrlInCache(feedId, urlNew, guid)
         await redis.srem(key, mediaId);
         const cnt = await redis.scard(key);
         console.log('cnt', cnt);
@@ -33,7 +36,6 @@ export async function POST(request: Request, { params }: { params: { id: string 
             await redis.del(key);
             await generateRssAndUpdateFeed(feedId);
         }
-
         // also update feed rss
     } catch (err) {
         console.log(err);
