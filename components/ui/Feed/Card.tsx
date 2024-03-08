@@ -50,9 +50,9 @@ export default function Card({...props}) {
     const refreshButtonClassName = "d-btn d-btn-sm d-btn-circle d-btn-primary flex-grow-1"
     let badMedia = !props.audioSrc;
     return (
-        <div className="flex flex-col flow-grow-1 owerflow-auto my-4">
-            <div className="d-card xxl:d-card-side min-w-96 bg-base-200 shadow-l">
-                {/* <figure><img src={props.cover} alt="Album"/></figure> */}
+        <div className="flex flex-col min-w-full flow-grow-1 owerflow-auto my-4">
+            <div className="d-card d-image-full bg-base-200 shadow-xl">
+                <figure><img src={props.cover} alt="Album"/></figure>
             <div className="d-card-body">
                 <h2 className="d-card-title">{props.title}</h2>
                 <p>{props.description}</p>
