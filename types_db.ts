@@ -115,6 +115,7 @@ export type Database = {
       media: {
         Row: {
           author: string | null
+          cover: string | null
           created_at: string
           description: string | null
           guid: string | null
@@ -125,6 +126,7 @@ export type Database = {
         }
         Insert: {
           author?: string | null
+          cover?: string | null
           created_at?: string
           description?: string | null
           guid?: string | null
@@ -135,6 +137,7 @@ export type Database = {
         }
         Update: {
           author?: string | null
+          cover?: string | null
           created_at?: string
           description?: string | null
           guid?: string | null

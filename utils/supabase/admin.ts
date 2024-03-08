@@ -35,7 +35,7 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     .upsert([productData]);
   if (upsertError)
     throw new Error(`Product insert/update failed: ${upsertError}`);
-  console.log(`Product inserted/updated: ${product.id}`);
+    console.log(`Product inserted/updated: ${product.id}`);
 };
 
 const upsertPriceRecord = async (
@@ -333,9 +333,9 @@ const createMedia = async (media: {feed_id:string,title: string, description: st
     author: media.author,
     description: media.description,
     source: media.source,
-    guid: media.guid
+    guid: media.guid,
     // url: mediaUrl
-    // cover: media.cover
+    cover: media.cover
   }
   const {error, data: mediaRow} = await supabaseAdmin.from('media').insert(mediaObj).select();
 
@@ -358,6 +358,29 @@ const createMedia = async (media: {feed_id:string,title: string, description: st
 
   return mediaRow[0].id;
 }
+
+const createMedias = async (feedId: string, medias: {title: string, description: string, cover: string, author: string, source: string, guid: string}[]) => {
+
+  // const mediaUrl = getURL('api/media/' + fileName);
+  const {error, data: mediaRows} = await supabaseAdmin.from('media').insert(medias).select();
+
+  if (error || mediaRows==null) {
+    console.warn(error, error && error.message);
+    console.error(`Media insert failed:`, error);
+    throw new Error(`Media insert failed: ${error}`);
+  }
+
+  const feed_medias = mediaRows.map(i => ({feed_id: feedId, media_id: i.id}))
+  const {error: feedMediaError} = await supabaseAdmin.from('feedMedia').insert(feed_medias);
+  if (feedMediaError) {
+    console.warn(feedMediaError, feedMediaError.message);
+    console.error(`FeedMedia insert failed: ${feedMediaError}`);
+    throw new Error(`FeedMedia insert failed: ${feedMediaError}`);
+  }
+
+  return mediaRows.map(i => i.id);
+}
+
 
 const updateMediaWithUrl = async (url: string, uuid: string) => {
   const {data, error} = await supabaseAdmin.from('media').update({url: url, id: uuid}).eq('id', uuid).select();
@@ -400,6 +423,7 @@ export {
   findFeed,
   uploadMedia,
   createMedia,
+  createMedias,
   updateMediaWithUrl,
   findFeedMedia,
   updateFeedWithXml
