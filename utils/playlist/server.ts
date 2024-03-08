@@ -91,7 +91,8 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
         playlistId: playlist_id,
         maxResults: 15,
     });
-    const resources = resp.data.items?.map((i) => i.snippet)
+    const snippet = resp.data.items?.map((i) => i.snippet)
+    const resources = snippet?.filter(i => i?.title!=='Private video')
     // console.info(resources)
     if (resources && resources.length > 0) {
         for (const i of resources) {
