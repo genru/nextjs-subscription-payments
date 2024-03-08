@@ -25,7 +25,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
             return new Response();
         }
         // const urlNew = await getPreSignedUrl(guid, 24 * 3600 * 7)
-        const urlNew = `https://pub-0d979674586542a19e779286f94d5375.r2.dev/6R2UhhsabTc/${guid}`
+        const urlNew = `${process.env['R2_PUBLIC_DOMAIN']}${guid}`
         await updateMediaWithUrl(urlNew, mediaId)
         await updateMediaUrlInCache(feedId, urlNew, guid)
         await redis.srem(key, mediaId);
