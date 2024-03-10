@@ -66,12 +66,16 @@ export async function parseUrl(dataFrom: FormData) {
                 cover: item.itunesImage || '',
                 author: item.author || 'unknown',
                 source: 'youtube',
-                guid: item.guid
+                guid: item.guid,
+                duration_in_sec: 0
             })));
-            await redis.sadd(itemsKey, ids);
-            await redis.expire(itemsKey, 60 * 3);
-            for (let i = 0; i < ids.length; i++) {
-                processYoutubeMediaUrl(pod.items[i].guid, feed_uuid, ids[i]).catch(console.error);
+
+            if(ids.length > 0) {
+                await redis.sadd(itemsKey, ids);
+                await redis.expire(itemsKey, 60 * 3);
+                for (let i = 0; i < ids.length; i++) {
+                    processYoutubeMediaUrl(pod.items[i].guid, feed_uuid, ids[i]).catch(console.error);
+                }
             }
             // for (const item of pod.items) {
             //     try {

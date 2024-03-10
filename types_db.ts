@@ -71,6 +71,7 @@ export type Database = {
           cover: string | null
           created_at: string
           description: string | null
+          guid: string | null
           id: number
           rss: string | null
           source: string | null
@@ -83,6 +84,7 @@ export type Database = {
           cover?: string | null
           created_at?: string
           description?: string | null
+          guid?: string | null
           id?: number
           rss?: string | null
           source?: string | null
@@ -95,6 +97,7 @@ export type Database = {
           cover?: string | null
           created_at?: string
           description?: string | null
+          guid?: string | null
           id?: number
           rss?: string | null
           source?: string | null
@@ -118,7 +121,8 @@ export type Database = {
           cover: string | null
           created_at: string
           description: string | null
-          guid: string | null
+          duration_in_sec: number
+          guid: string
           id: string
           source: string | null
           title: string | null
@@ -129,7 +133,8 @@ export type Database = {
           cover?: string | null
           created_at?: string
           description?: string | null
-          guid?: string | null
+          duration_in_sec: number
+          guid: string
           id?: string
           source?: string | null
           title?: string | null
@@ -140,7 +145,8 @@ export type Database = {
           cover?: string | null
           created_at?: string
           description?: string | null
-          guid?: string | null
+          duration_in_sec?: number
+          guid?: string
           id?: string
           source?: string | null
           title?: string | null

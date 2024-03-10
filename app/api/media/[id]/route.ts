@@ -14,7 +14,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
         const body = await request.json();
         const mediaId = params.id;
         console.log({...body, mediaId});
-        const {url, feedId, guid} = body;
+        const {url, feedId, guid, durationInSec} = body;
         const key = `items:${feedId}`;
         const exist = (1===await redis.exists(key));
         if(!exist) {
@@ -25,9 +25,9 @@ export async function POST(request: Request, { params }: { params: { id: string 
             return new Response();
         }
         // const urlNew = await getPreSignedUrl(guid, 24 * 3600 * 7)
-        const urlNew = `${process.env['R2_PUBLIC_DOMAIN']}${guid}`
-        await updateMediaWithUrl(urlNew, mediaId)
-        await updateMediaUrlInCache(feedId, urlNew, guid)
+        const urlNew = `${process.env['R2_PUBLIC_DOMAIN']}${guid}.m4a`
+        await updateMediaWithUrl(urlNew, +durationInSec, mediaId)
+        await updateMediaUrlInCache(feedId, urlNew, guid, +durationInSec)
         await redis.srem(key, mediaId);
         const cnt = await redis.scard(key);
         console.log('cnt', cnt);
@@ -43,7 +43,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     return new Response();
 }
 
-async function updateMediaUrlInCache(feedId: string, url: string, guid: string) {
+async function updateMediaUrlInCache(feedId: string, url: string, guid: string, duration: number) {
     const key = `pod:${feedId}`;
     const exist = (1===await redis.exists(key));
     const txt = await redis.get(key);
@@ -57,6 +57,7 @@ async function updateMediaUrlInCache(feedId: string, url: string, guid: string) 
             return;
         }
         item.url =  url;
+        item.itunesDuration = duration;
         item.enclosure && (item.enclosure.url = url) || (item.enclosure = {url: url, type:'audio/x-m4a', size:0});
         await redis.set(key, JSON.stringify(pod), 'EX', 180);
     } catch (err) {
