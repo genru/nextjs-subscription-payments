@@ -16,10 +16,9 @@ export default function Footer() {
           >
             <span className="mr-2">
               {/* <Logo /> */}
-              <span className={LogoFont.className+' '+'text-3xl'}>
+              <span className={LogoFont.className+' '+'text-3xl tracking-tight hover:tracking-normal'}>
                 poddiy
               </span>
-
             </span>
           </Link>
         </div>

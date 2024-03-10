@@ -23,7 +23,7 @@ export default function Navlinks({ user }: NavlinksProps) {
       <div className="flex-1">
         {/* <a className="d-btn d-btn-ghost text-xl"> */}
         <Link href="/" className="d-btn d-btn-ghost hover:bg-transparent" aria-label="Logo">
-          <span className={LogoFont.className+' '+'text-3xl'}>
+          <span className={LogoFont.className+' '+'text-3xl tracking-tight hover:tracking-normal'}>
             poddiy
           </span>
         </Link>
