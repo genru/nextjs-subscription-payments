@@ -1,5 +1,5 @@
 import { getURL } from "@/utils/helpers";
-import { findFeedMedia } from "@/utils/supabase/admin";
+import { findFeedMedia, updateFeedWithXml } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
 import { Podcast } from "podcast";
 import { cache } from "react";
@@ -21,6 +21,13 @@ const loadRss = cache(async (feed_uuid: string) => {
   if(!feed) {
     console.info('no feed found')
     return new Response(null, {status: 404});
+  }
+
+  if(feed.rss) {
+    const header = new Headers({
+      "Content-Type": "text/xml",
+    });
+    return new Response(feed.rss, {headers: header});
   }
   const medias = await findFeedMedia(feed.uuid);
   const hostUrl = getURL();
@@ -75,6 +82,8 @@ const loadRss = cache(async (feed_uuid: string) => {
     });
   });
   feed.rss = pod.buildXml();
+  await updateFeedWithXml(feed_uuid, feed.rss);
+  console.log('save rss ok')
   // Response.send(feed.rss.rss);
   const header = new Headers({
     "Content-Type": "text/xml",
