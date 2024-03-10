@@ -325,7 +325,7 @@ const uploadMedia = async (fileName: string, body: ReadableStream) => {
   return supabaseAdmin.storage.from('media').upload(fileName, body)
 }
 
-const createMedia = async (media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string, guid: string}) => {
+const createMedia = async (media: {feed_id:string,title: string, description: string, cover: string, author: string, source: string, guid: string, duration: number}) => {
 
   // const mediaUrl = getURL('api/media/' + fileName);
   const mediaObj: TablesInsert<'media'> = {
@@ -335,7 +335,8 @@ const createMedia = async (media: {feed_id:string,title: string, description: st
     source: media.source,
     guid: media.guid,
     // url: mediaUrl
-    cover: media.cover
+    cover: media.cover,
+    duration_in_sec: media.duration
   }
   const {error, data: mediaRow} = await supabaseAdmin.from('media').insert(mediaObj).select();
 
@@ -359,7 +360,7 @@ const createMedia = async (media: {feed_id:string,title: string, description: st
   return mediaRow[0].id;
 }
 
-const createMedias = async (feedId: string, medias: {title: string, description: string, cover: string, author: string, source: string, guid: string}[]) => {
+const createMedias = async (feedId: string, medias: {title: string, description: string, cover: string, author: string, source: string, guid: string, duration_in_sec: number}[]) => {
 
   // check if media exists
   const {error: errorExists, data: existMediaRows} = await supabaseAdmin.from('media').select().in('guid', medias.map(i => i.guid)).select();
