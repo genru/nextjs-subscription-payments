@@ -4,6 +4,8 @@ import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
 import { getURL } from '@/utils/helpers';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import 'styles/main.css';
 import Script from 'next/script';
 
@@ -65,6 +67,8 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         <Suspense>
           <Toaster />
         </Suspense>
+        <SpeedInsights/>
+        <Analytics/>
       </body>
     </html>
   );
