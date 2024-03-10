@@ -2,16 +2,15 @@ import { getURL } from "@/utils/helpers";
 import { findFeedMedia } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
 import { Podcast } from "podcast";
+import { cache } from "react";
 
-export async function GET(request: Request,{ params }: { params: { id: string } }) {
-
-  console.log(params.id);
+const loadRss = cache(async (feed_uuid: string) => {
+  console.info(feed_uuid)
   const supabase = await createClient();
-
 
   const { data: feed, error } = await supabase
     .from('feeds')
-    .select('*').eq('uuid', params.id)
+    .select('*').eq('uuid', feed_uuid)
     .single();
 
   if (error) {
@@ -81,4 +80,9 @@ export async function GET(request: Request,{ params }: { params: { id: string } 
     "Content-Type": "text/xml",
   });
   return new Response(feed.rss, {headers: header});
+
+})
+export async function GET(request: Request,{ params }: { params: { id: string } }) {
+
+  return loadRss(params.id);
 }
