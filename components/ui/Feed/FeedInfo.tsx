@@ -39,39 +39,43 @@ export function FeedInfo({ ...props }) {
         className="w-96 h-full mt-4 flex-shrink-0 overflow-y-auto overflow-x-hidden transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidenav"
       >
-        <div className="d-card d-card-compact w-96 bg-base-200 shadow-md rounded-2xl">
-          <figure>
-            <img
-              src={
-                props.cover ||
-                'https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg'
-              }
-              alt={props.title || undefined}
-            />
-          </figure>
-          <div className="d-card-body bg-transparent">
-            <h2 className="d-card-title">{props.title}</h2>
-            <p className="text-xs">{props.author}</p>
-            <div className="d-card-actions justify-center flex flex-row">
-              <button
-                className="d-btn d-btn-sm d-btn-secondary flex-grow-1 w-2/5 text-zinc-700 hover:text-white"
-                onClick={showRssModal}
-              >
-                {' '}
-                <Podcast width={16} height={16} /> RSS
-              </button>
-              <button
-                className="d-btn d-btn-sm d-btn-primary flex-grow-1 w-2/5 text-zinc-700 hover:text-gray-200"
-                onClick={showNewModal}
-              >
-                {' '}
-                <Music width={16} height={16} /> Add
-              </button>
+        <div className='top-0 left-0 w-full h-full'>
+            {/* <img src={props.cover}></img> */}
+            <div className="d-card d-card-bordered border-base-300 w-96 bg-base-100 shadow-sm rounded-sm">
+                <figure className='p-0 rounded-md '>
+                    <img
+                    src={
+                        props.cover ||
+                        'https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg'
+                    }
+                    alt={props.title || undefined}
+                    />
+                </figure>
+                <div className="d-card-body">
+                    <h2 className="d-card-title font-medium">{props.title}</h2>
+                    <p className="text-xs">{props.author}</p>
+                    <div className="d-card-actions mt-4 justify-center flex flex-row">
+                    <button
+                        className="d-btn d-btn-sm h-10 d-btn-neutral flex-grow-1 w-2/5"
+                        onClick={showRssModal}
+                    >
+                        {' '}
+                        <Podcast width={16} height={16} /> RSS
+                    </button>
+                    <button
+                        className="d-btn d-btn-sm h-10 d-btn-neutral flex-grow-1 w-2/5"
+                        onClick={showNewModal}
+                    >
+                        {' '}
+                        <Music width={16} height={16} /> Add
+                    </button>
+                    </div>
+                    <p className="text-neural py-8">{props.description}</p>
+                </div>
             </div>
-            <p className="text-neural py-8">{props.description}</p>
-          </div>
         </div>
       </div>
+
       <dialog id="modal_rss" className="d-modal">
         <div className="d-modal-box bg-base-100">
           <h3 className="font-bold text-lg"> Podcast(iTunes) rss url</h3>

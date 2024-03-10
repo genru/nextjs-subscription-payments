@@ -68,7 +68,7 @@ export default async function Feed({params}:{params:{id:string}}) {
                 cover={feed.cover}
                 author={feed.author}
                 rss={getURL(`feeds/${feed.uuid}/rss`)}/>
-            <div className="flex flex-col items-start flex-grow-1 px-12 gap-2 w-full overflow-y-scroll">
+            <div className="flex flex-col items-start flex-grow-1 px-12 gap-3 mt-4 w-full overflow-y-scroll">
                 {medias.map(i => (<Card title={i.title} description={i.author} audioSrc={i.url} cover={i.cover} key={i.url} />))}
             </div>
         </section>
