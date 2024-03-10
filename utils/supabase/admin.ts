@@ -418,17 +418,14 @@ const findFeedMedia = async (feedId: string) => {
     // console.error(`FeedMedia lookup failed: ${error}`);
     throw new Error(`FeedMedia lookup failed`);
   }
-  console.log(mediaIds);
   const {data: medias, error: mediaError} = await supabaseAdmin.from('media').select("*").in('id', mediaIds.map(i=>i.media_id));
   if (mediaError) {
     console.warn(mediaError, mediaError && mediaError.message);
     // console.error(`Media lookup failed: ${mediaError}`);
     throw new Error(`Media lookup failed:`);
   }
-  console.log(medias);
 
   return medias;
-  // return supabaseAdmin.from('media').select("*");
 }
 
 export {
