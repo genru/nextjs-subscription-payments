@@ -11,8 +11,6 @@ export default function Card({...props}) {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     function onReady(e: any) {
-        // audioCtrl = audio;
-        console.log(e.duration);
         setIsLoaded(true);
         setDuration(e.duration);
     }
@@ -51,17 +49,20 @@ export default function Card({...props}) {
     let badMedia = !props.audioSrc;
     return (
         <div className="flex flex-col min-w-full flow-grow-1 owerflow-auto my-4">
-            <div className="d-card d-image-full bg-base-200 shadow-xl">
-                <figure><img src={props.cover} alt="Album"/></figure>
+            <div className="d-card bg-base-200 shadow-xl">
             <div className="d-card-body">
-                <h2 className="d-card-title">{props.title}</h2>
-                <p>{props.description}</p>
+                <div className="flex">
+                    <figure className="w-32 rounded-xl ring ring-primary ring-offset-base-100 ring-offset-2 mr-4"><img src={props.cover} alt="Album"/></figure>
+                    <div className="flex flex-col">
+                        <h2 className="d-card-title">{props.title}</h2>
+                        <p>{props.description}</p>
+                    </div>
+                </div>
                 { badMedia && <p className="text-xs text-error flex items-center"><AlertTriangle height={12} width={12}/> <span className="ml-2">bad media</span></p>}
                 <div className="d-card-actions justify-end flex items-center">
                     <div className="text-xs">{formatTime(currentTime)}/{formatTime(duration)}</div>
                     <ProgressBar currentTime={currentTime} duration={duration} onClick={seek} />
-                    {/* <input type="range" readOnly min={0} max={duration} value={currentTime} className="d-range d-range-xs" /> */}
-                    <AudioComponent ref={audioCtrl} src={props.audioSrc} type={'audio/mp3'} onReady={onReady} onTimeUpdate={(e)=>updateTime(e)}/>
+                    <AudioComponent ref={audioCtrl} src={props.audioSrc} type={'audio/webm'} onReady={onReady} onTimeUpdate={(e)=>updateTime(e)}/>
 
                     {
                         badMedia ?  (<><button className={refreshButtonClassName} onClick={reloadMedia}><RefreshCw height={12} width={12}/></button></>) : (<button className={rootClassName} onClick={togglePlay}>

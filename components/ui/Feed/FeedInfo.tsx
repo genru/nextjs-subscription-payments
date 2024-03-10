@@ -36,10 +36,10 @@ export function FeedInfo({ ...props }) {
   return (
     <>
       <div
-        className="w-96 h-full flex-shrink-0 overflow-y-auto overflow-x-hidden transition-transform -translate-x-full sm:translate-x-0"
+        className="w-96 h-full mt-4 flex-shrink-0 overflow-y-auto overflow-x-hidden transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidenav"
       >
-        <div className="d-card d-card-compact w-96 bg-base-300 shadow-md rounded-2xl from-slate-800">
+        <div className="d-card d-card-compact w-96 bg-base-200 shadow-md rounded-2xl">
           <figure>
             <img
               src={

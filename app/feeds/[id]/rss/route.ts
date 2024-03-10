@@ -23,7 +23,6 @@ export async function GET(request: Request,{ params }: { params: { id: string } 
     console.info('no feed found')
     return new Response(null, {status: 404});
   }
-console.log(feed);
   const medias = await findFeedMedia(feed.uuid);
   const hostUrl = getURL();
   const feedUrl = getURL('feed.xml');
