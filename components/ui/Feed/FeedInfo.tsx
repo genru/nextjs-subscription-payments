@@ -1,19 +1,20 @@
 'use client';
-import { Play, Shuffle, ClipboardCheck, Music, Podcast } from 'lucide-react';
+import { Play, Shuffle, ClipboardCheck, Music, Podcast, RefreshCw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 export function FeedInfo({ ...props }) {
   const [copyText, setCopyText] = useState('copy');
+  const [showNewModal, setShowNewModal] = useState(false);
   function showRssModal() {
     const modal = document.querySelector('#modal_rss');
     // @ts-ignore
     modal?.showModal();
   }
 
-  function showNewModal() {
+  function toggleNewModal() {
     const modal = document.querySelector('#modal_new');
-    // @ts-ignore
-    modal?.showModal();
+        // @ts-ignore
+        modal?.showModal();
   }
 
   function toggleCopyButton() {
@@ -30,8 +31,21 @@ export function FeedInfo({ ...props }) {
 
   function createNew(e: React.FormEvent<HTMLFormElement>) {
     const formdata = new FormData(e.currentTarget);
-    console.info(e, formdata)
-    // e.preventDefault();
+    const submitEvent: SubmitEvent = e.nativeEvent as SubmitEvent;
+    console.log(submitEvent?.submitter?.dataset['role']);
+    if(submitEvent?.submitter?.dataset['role'] !== 'close') {
+        console.info(e, formdata.get('url'))
+    }
+  }
+
+  function feedMenuItems() {
+    return (
+        <>
+        <li><a><RefreshCw width={16} height={16} />Refresh</a></li>
+        <li><button className='text-error' onClick={() => console.info('remove clicked')}><Trash2 width={16} height={16} />Remove</button></li>
+        <li><a><RefreshCw width={16} height={16} />refresh</a></li>
+        </>
+    )
   }
   return (
     <>
@@ -52,21 +66,22 @@ export function FeedInfo({ ...props }) {
                     />
                 </figure>
                 <div className="d-card-body">
-                    <h2 className="d-card-title font-medium">{props.title}</h2>
+                    {/* <h2 className="d-card-title font-medium">{props.title}</h2> */}
+                    <NavbarAction title={props.title} menuItems={feedMenuItems()} />
                     <p className="text-xs">{props.author}</p>
                     <div className="d-card-actions mt-4 justify-center flex flex-row">
                     <button
                         className="d-btn d-btn-sm h-10 d-btn-neutral flex-grow-1 w-2/5"
                         onClick={showRssModal}
                     >
-                        {' '}
+
                         <Podcast width={16} height={16} /> RSS
                     </button>
                     <button
                         className="d-btn d-btn-sm h-10 d-btn-neutral flex-grow-1 w-2/5"
-                        onClick={showNewModal}
+                        onClick={toggleNewModal}
                     >
-                        {' '}
+
                         <Music width={16} height={16} /> Add
                     </button>
                     </div>
@@ -104,7 +119,7 @@ export function FeedInfo({ ...props }) {
             </button>
           </div>
           <div className="d-modal-action">
-            <form method="d-dialog">
+            <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="d-btn">Close</button>
             </form>
@@ -118,26 +133,48 @@ export function FeedInfo({ ...props }) {
           <p className="py-4 text-secondary-content">
             open your podcast or iTunes and import below url
           </p>
-          <form id="urlForm" onSubmit={createNew}>
+          <form id="urlForm"  onSubmit={createNew} method="dialog">
             <input
-              className="d-join-item d-input d-input-bordered d-input-primary w-96"
+              className="d-input d-input-bordered w-96 z-0"
               placeholder="https://youtube.com/watch?v=xxxx"
-              type="url"
-              name='url'
+              type="text"
+              name="url"
             />
+          </form>
             <div className="d-modal-action">
               {/* if there is a button in form, it will close the modal */}
               <button
                 form='urlForm'
-                type="submit"
+                type='submit'
                 className="d-btn d-btn-accent text-accent-content"
               >
                 Save
               </button>
+              <button form='urlForm'type='submit' className='d-btn d-btn-neutral d-btn-outline' data-role="close">Close</button>
             </div>
-          </form>
+          {/* </form> */}
         </div>
       </dialog>
     </>
   );
+}
+
+function NavbarAction({...props}) {
+    return (
+        <div className="d-navbar bg-base-100">
+            <div className="flex-1">
+                <h2 className="text-xl font-semibold">{props.title}</h2>
+            </div>
+            <div className="flex-none">
+                <div className="d-dropdown d-dropdown-end">
+                    <div tabIndex={0} role="button" className="d-btn  d-btn-xs d-btn-square d-btn-ghost m-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                    </div>
+                    <ul tabIndex={0} className="d-dropdown-content z-[1] d-menu p-2 shadow bg-base-100 rounded-box w-32">
+                        {props.menuItems}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    )
 }
