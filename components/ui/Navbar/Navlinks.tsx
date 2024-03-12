@@ -48,7 +48,7 @@ export default function Navlinks({ user }: NavlinksProps) {
               <summary>
                 Parent
               </summary>
-              <ul className="p-2 bg-base-100 rounded-t-none">
+              <ul className="p-2 bg-base-100 rounded-t-none z-10">
                 <li><a>Link 1</a></li>
                 <li><a>Link 2</a></li>
               </ul>
