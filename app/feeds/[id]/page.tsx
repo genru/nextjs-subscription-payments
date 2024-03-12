@@ -1,6 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from "next/navigation";
-import { Play, Shuffle } from "lucide-react";
+import { Play, LayoutGrid, MoreVertical, ListOrdered, Sigma } from "lucide-react";
 import Card from "@/components/ui/Feed/Card";
 import { FeedInfo } from '@/components/ui/Feed/FeedInfo';
 import { getURL } from '@/utils/helpers';
@@ -69,9 +69,51 @@ export default async function Feed({params}:{params:{id:string}}) {
                 author={feed.author}
                 rss={getURL(`feeds/${feed.uuid}/rss`)}/>
             <div className="flex flex-col items-start flex-grow-1 px-12 gap-3 mt-4 w-full overflow-y-scroll">
+                <NavbarAction/>
                 {medias.map(i => (<Card title={i.title} description={i.author} audioSrc={i.url} cover={i.cover} key={i.url} />))}
             </div>
         </section>
 
+    )
+}
+
+function NavbarAction({...props}) {
+    return (
+        <div className="d-navbar bg-base-100">
+        <div className="flex-1">
+            <div className="text-base-content font-extralight">
+                <ul className="d-menu pointer-events-none lg:d-menu-horizontal d-rounded-box rounded-xl">
+                <li>
+                    <div>
+                    Total episodes
+                    <span className="d-badge d-badge-md">18</span>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                    Last updates
+                    <span className="d-badge d-badge-sm d-badge-neutral">2024-01-12</span>
+                    </div>
+                </li>
+                </ul>
+            </div>
+        </div>
+        <div className="flex-none">
+            <ul className="d-menu d-menu-horizontal px-1">
+                <li><button><LayoutGrid width={20} height={20}/></button></li>
+                <li>
+                    <details>
+                        <summary>
+                        <ListOrdered />
+                        </summary>
+                        <ul className="p-0 bg-base-100 rounded-t-none z-10 w-28">
+                            <li><a>by Date</a></li>
+                            <li><a>by Alphal</a></li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+        </div>
+        </div>
     )
 }
