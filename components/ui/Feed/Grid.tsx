@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Grid({...props}) {
     return (
         <div className="flex items-center gap-3">
-            {props.feeds.map((feed: { title: string; description: string; cover: string; uuid: string; }) => <Card key={feed.id} title={feed.title} summary={feed.description} cover={feed.cover} id={feed.uuid}/>)}
+            {props.feeds.map((feed: { title: string; description: string; cover: string; uuid: string; }) => <Card key={feed.uuid} title={feed.title} summary={feed.description} cover={feed.cover} id={feed.uuid}/>)}
         </div>
     )
 }
