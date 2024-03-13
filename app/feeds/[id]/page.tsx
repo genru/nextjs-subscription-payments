@@ -4,6 +4,7 @@ import { Play, LayoutGrid, MoreVertical, ListOrdered, Sigma } from "lucide-react
 import Card from "@/components/ui/Feed/Card";
 import { FeedInfo } from '@/components/ui/Feed/FeedInfo';
 import { getURL } from '@/utils/helpers';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
 export default async function Feed({params}:{params:{id:string}}) {
 
@@ -62,16 +63,21 @@ export default async function Feed({params}:{params:{id:string}}) {
 
 
     return (
-        <section className="container relative m-auto flex overflow-hidden h-full">
+        <section className='container m-auto px-4 w-full mb-32 py-8 sm:pt-16'>
+        <Breadcrumbs paths={[{href:'/',title: 'Home'}, {href:'/feeds', title: "My Feeds"}, {href:'#', title: feed.title}]}/>
+        <NavbarAction title={feed.title}/>
+        <div className=" relative m-auto flex overflow-hidden">
+
             <FeedInfo title={feed.title}
                 description={feed.description}
                 cover={feed.cover}
                 author={feed.author}
                 rss={getURL(`feeds/${feed.uuid}/rss`)}/>
             <div className="flex flex-col items-start flex-grow-1 px-12 gap-3 mt-4 w-full overflow-y-scroll">
-                <NavbarAction/>
                 {medias.map(i => (<Card title={i.title} description={i.author} audioSrc={i.url} cover={i.cover} key={i.url} />))}
             </div>
+        </div>
+
         </section>
 
     )
@@ -79,8 +85,9 @@ export default async function Feed({params}:{params:{id:string}}) {
 
 function NavbarAction({...props}) {
     return (
-        <div className="d-navbar bg-base-100">
+        <div className="d-navbar h-4 min-h-8 mb-4">
         <div className="flex-1">
+            <h2 className="text-2xl">{props.title}</h2>
             <div className="text-base-content font-extralight">
                 <ul className="d-menu pointer-events-none lg:d-menu-horizontal d-rounded-box rounded-xl">
                 <li>
