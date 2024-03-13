@@ -63,8 +63,8 @@ export default async function Feed({params}:{params:{id:string}}) {
 
 
     return (
-        <section className='container m-auto px-4 w-full mb-32 py-8 sm:pt-16'>
-        <Breadcrumbs paths={[{href:'/',title: 'Home'}, {href:'/feeds', title: "My Feeds"}, {href:'#', title: feed.title}]}/>
+        <section className='container m-auto px-4 w-full mb-32 py-8 sm:pt-8'>
+        <Breadcrumbs className="mb-4" paths={[{href:'/',title: 'Home'}, {href:'/feeds', title: "My Feeds"}, {href:'#', title: feed.title}]}/>
         <NavbarAction title={feed.title}/>
         <div className=" relative m-auto flex overflow-hidden">
 

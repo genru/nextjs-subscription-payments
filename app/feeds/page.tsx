@@ -31,10 +31,10 @@ export default async function Feeds() {
       console.log(error);
     }
 
-    console.info(feeds)
+    // console.info(feeds)
     return (
-        <section className="container m-auto px-4 w-full mb-32 py-8 sm:pt-16">
-            <Breadcrumbs paths={[{href:'/',title: 'Home'}, {title: 'My Feeds'}]}/>
+        <section className="container m-auto px-4 w-full mb-32 py-8 sm:pt-8">
+            <Breadcrumbs className="mb-4" paths={[{href:'/',title: 'Home'}, {title: 'My Feeds'}]}/>
             <NavbarAction title="feeds"/>
             <Grid feeds={feeds}/>
         </section>

@@ -31,10 +31,15 @@ export default function Navlinks({ user }: NavlinksProps) {
       <div className="flex-none">
         <ul className="d-menu d-menu-horizontal px-1">
           <li>
+            <Link href="/feeds" >
+              My Feeds
+            </Link>
+          </li>
+          <li>
           <Link href="/pricing" >
             Pricing
           </Link>
-            </li>
+          </li>
           {user && (
           <li>
           <Link href="/account">
@@ -48,7 +53,8 @@ export default function Navlinks({ user }: NavlinksProps) {
               <summary>
                 Parent
               </summary>
-              <ul className="p-2 bg-base-100 rounded-t-none z-10">
+              <ul className="p-2 bg-base-100 rounded-t-none z-10
+              ">
                 <li><a>Link 1</a></li>
                 <li><a>Link 2</a></li>
               </ul>
@@ -69,18 +75,18 @@ export default function Navlinks({ user }: NavlinksProps) {
             </label>
           </li>
           <li>
-          {user ? (
-          <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
-            <input type="hidden" name="pathName" value={usePathname()} />
-            <button type="submit">
-              Sign out
-            </button>
-          </form>
-        ) : (
-          <Link href="/signin">
-            Sign In
-          </Link>
-        )}
+            {user ? (
+              <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
+                <input type="hidden" name="pathName" value={usePathname()} />
+                <button type="submit">
+                  Sign out
+                </button>
+              </form>
+            ) : (
+              <Link href="/signin">
+                Sign In
+              </Link>
+            )}
           </li>
         </ul>
       </div>

@@ -2,9 +2,13 @@ import { Layers, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 export default function Grid({...props}) {
+    const cards = props.feeds?.map((feed: { title: string; description: string; cover: string; uuid: string; }) => {
+        return <Card key={feed.uuid} title={feed.title} summary={feed.description} cover={feed.cover} id={feed.uuid}/>
+    })
+
     return (
         <div className="flex items-center gap-3">
-            {props.feeds.map((feed: { title: string; description: string; cover: string; uuid: string; }) => <Card key={feed.uuid} title={feed.title} summary={feed.description} cover={feed.cover} id={feed.uuid}/>)}
+            {cards}
         </div>
     )
 }
@@ -12,11 +16,11 @@ export default function Grid({...props}) {
 function Card({...props}) {
     return (
         <div className="d-card d-card-compact w-96 h-60 hover:bg-base-100 shadow-xl d-image-full group/item">
-            <figure className="blur-md overflow-clip"><img src={props.cover} alt="Shoes" /></figure>
+            <figure className="blur-lg invert odd:sepia overflow-clip"><img src={props.cover} alt="Shoes" /></figure>
             <div className="d-card-body w-96">
                 {/* <h2 className="d-card-title">{props.title}</h2> */}
                 <NavbarAction title={props.title}/>
-                <p className="text-xs h-12 w-auto overflow-ellipsis overflow-clip">{props.summary||'summary'}</p>
+                <p className="text-xs h-12 w-auto overflow-ellipsis overflow-clip">{props.summary}</p>
                 <div>
                 <ul className="inline-flex items-center gap-2 list-none *:flex *:items-center *:gap-1">
                     <li>
