@@ -1,5 +1,5 @@
 'use client'
-import { Music4 } from "lucide-react";
+import { FolderPlus, Music4, Youtube } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BaseSyntheticEvent, useState } from "react";
 
@@ -27,10 +27,26 @@ export default function NavbarAction({...props}) {
             <div className="flex-none">
             <ul className="d-menu d-menu-horizontal d-rounded-box">
                 <li className="d-tooltip" data-tip="add new feeds">
-                    <button className="d-btn-ghost d-btn d-btn-sm" onClick={toggleNewModal}>
-                        <Music4 width={18} height={18}/>
-                        New
-                    </button>
+                    <details>
+                        <summary>
+                        <Music4 width={18} height={18}/>New Feed
+                        </summary>
+                        <ul className="w-28 *:items-start z-30">
+                                <li>
+                                    <button className="d-btn-ghost d-btn d-btn-sm d-btn-accent" onClick={toggleNewModal}>
+                                        <Youtube width={18} height={18}/>
+                                        Import
+                                    </button>
+                                </li>
+                                <li>
+                                    <button className="d-btn-ghost d-btn d-btn-sm" >
+                                        <FolderPlus width={18} height={18}/>
+                                        Form
+                                    </button>
+                                </li>
+                        </ul>
+
+                    </details>
                 </li>
             </ul>
             </div>
@@ -44,7 +60,7 @@ function Dialog({...props}) {
     return (
         <dialog id="modal_new" className="d-modal">
             <div className="d-modal-box bg-base-100">
-            <h3 className="font-bold text-lg"> Create new feed from youtube playlist</h3>
+            <h3 className="font-bold text-lg"> Import from youtube playlist</h3>
             <p className="py-4 text-secondary-content">
                 Paste youtube video url here
             </p>

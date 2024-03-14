@@ -1,9 +1,9 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from "next/navigation";
-import { Play, LayoutGrid, MoreVertical, ListOrdered, Sigma } from "lucide-react";
+import { ArrowDownWideNarrow } from "lucide-react";
 import Card from "@/components/ui/Feed/Detail/Card";
 import { FeedInfo } from '@/components/ui/Feed/Detail/FeedInfo';
-import { getURL } from '@/utils/helpers';
+import { daysago, getURL } from '@/utils/helpers';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
 export default async function Feed({params}:{params:{id:string}}) {
@@ -65,10 +65,11 @@ export default async function Feed({params}:{params:{id:string}}) {
     return (
         <section className='container m-auto px-4 w-full mb-32 py-8 sm:pt-8'>
         <Breadcrumbs className="mb-4" paths={[{href:'/',title: 'Home'}, {href:'/feeds', title: "My Feeds"}, {href:'#', title: feed.title}]}/>
-        <NavbarAction title={feed.title}/>
+        <NavbarAction title={feed.title} episodes={medias.length} created={feed.created_at}/>
         <div className=" relative m-auto flex overflow-hidden">
 
             <FeedInfo title={feed.title}
+                feed={feed}
                 description={feed.description}
                 cover={feed.cover}
                 author={feed.author}
@@ -93,13 +94,13 @@ function NavbarAction({...props}) {
                 <li>
                     <div>
                     Total episodes
-                    <span className="d-badge d-badge-md">18</span>
+                    <span className="d-badge d-badge-md d-badge-primary">{props.episodes}</span>
                     </div>
                 </li>
                 <li>
                     <div>
-                    Last updates
-                    <span className="d-badge d-badge-sm d-badge-neutral">2024-01-12</span>
+                    Created
+                    <span className="d-badge d-badge-sm d-badge-primary">{daysago(props.created)}</span>
                     </div>
                 </li>
                 </ul>
@@ -107,11 +108,11 @@ function NavbarAction({...props}) {
         </div>
         <div className="flex-none">
             <ul className="d-menu d-menu-horizontal px-1">
-                <li><button><LayoutGrid width={20} height={20}/></button></li>
+                <li className='invisible'><button><ArrowDownWideNarrow width={20} height={20}/></button></li>
                 <li>
                     <details>
                         <summary>
-                        <ListOrdered />
+                        <ArrowDownWideNarrow />
                         </summary>
                         <ul className="p-0 bg-base-100 rounded-t-none z-10 w-28">
                             <li><a>by Date</a></li>

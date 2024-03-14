@@ -1,5 +1,6 @@
 import { parseUrl } from "@/app/actions";
 import Loading from "./Loading";
+import { createFeedByYoutube } from "@/utils/rss/server";
 
 export default function CallToAction() {
 
@@ -13,7 +14,7 @@ export default function CallToAction() {
             <h1 className="mb-4 text-4xl font-bold tracking-tight leading-none md:text-5xl lg:text-6xl">Build Your Podcast in 10 Seconds</h1>
             <p className="mb-8 text-lg font-light lg:text-xl sm:px-16 xl:px-48">Copy & paste youtube playlist <span className="bg-gray-300 dark:bg-gray-700 text-zinc-600 p-1 rounded-xl">(https://www.youtube.com/playlist?list=xxxxx)</span> url you want to listen to.</p>
             <div className="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-              <form action={parseUrl} className="grid grid-cols-1 gap-12 content-center justify-center">
+              <form action={createFeedByYoutube} className="grid grid-cols-1 gap-12 content-center justify-center">
                 <div className="d-join">
                   <input type="url" name="url" className="d-input d-input-bordered d-join-item w-80" placeholder="paste url here"/>
                   <button type='submit' className="d-btn d-btn-primary d-join-item w-40">Start</button>

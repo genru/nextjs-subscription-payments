@@ -1,10 +1,14 @@
 'use client';
+import { handleRequest } from '@/utils/auth-helpers/client';
+import { addEpisodeByYoutube } from '@/utils/rss/server';
 import { Play, Shuffle, ClipboardCheck, Music, Podcast, RefreshCw, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export function FeedInfo({ ...props }) {
   const [copyText, setCopyText] = useState('copy');
   const [showNewModal, setShowNewModal] = useState(false);
+  const router = useRouter();
   function showRssModal() {
     const modal = document.querySelector('#modal_rss');
     // @ts-ignore
@@ -14,7 +18,7 @@ export function FeedInfo({ ...props }) {
   function toggleNewModal() {
     const modal = document.querySelector('#modal_new');
         // @ts-ignore
-        modal?.showModal();
+    modal?.showModal();
   }
 
   function toggleCopyButton() {
@@ -29,12 +33,13 @@ export function FeedInfo({ ...props }) {
     }
   }
 
-  function createNew(e: React.FormEvent<HTMLFormElement>) {
+  async function createNew(e: React.FormEvent<HTMLFormElement>) {
     const formdata = new FormData(e.currentTarget);
     const submitEvent: SubmitEvent = e.nativeEvent as SubmitEvent;
     console.log(submitEvent?.submitter?.dataset['role']);
     if(submitEvent?.submitter?.dataset['role'] !== 'close') {
         console.info(e, formdata.get('url'))
+        await handleRequest(e, addEpisodeByYoutube, router);
     }
   }
 
@@ -43,7 +48,6 @@ export function FeedInfo({ ...props }) {
         <>
         <li><a><RefreshCw width={16} height={16} />Refresh</a></li>
         <li><button className='text-error' onClick={() => console.info('remove clicked')}><Trash2 width={16} height={16} />Remove</button></li>
-        <li><a><RefreshCw width={16} height={16} />refresh</a></li>
         </>
     )
   }
@@ -134,6 +138,7 @@ export function FeedInfo({ ...props }) {
             open your podcast or iTunes and import below url
           </p>
           <form id="urlForm"  onSubmit={createNew} method="dialog">
+            <input type="hidden" name="feed_id" value={props.feed.uuid} />
             <input
               className="d-input d-input-bordered w-96 z-0"
               placeholder="https://youtube.com/watch?v=xxxx"
