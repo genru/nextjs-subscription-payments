@@ -77,26 +77,6 @@ export async function parseUrl(dataFrom: FormData) {
                     processYoutubeMediaUrl(pod.items[i].guid, feed_uuid, ids[i]).catch(console.error);
                 }
             }
-            // for (const item of pod.items) {
-            //     try {
-            //         const media_id = await createMedia({
-            //             feed_id: feed_uuid,
-            //             title: item.title,
-            //             description: item.description,
-            //             cover: item.imageUrl || '',
-            //             author: item.author || 'unknown',
-            //             source: 'youtube',
-            //             guid: item.guid
-            //         });
-            //         await redis.sadd(itemsKey, media_id);
-            //         await redis.expire(itemsKey, 60 * 3);
-            //         processYoutubeMediaUrl(item.guid, feed_uuid, media_id).catch(console.error);
-            //     } catch (ex) {
-            //         console.error(ex);
-            //     }
-            // }
-
-            // update feed with feed-items
         }
     } catch (err) {
         console.error(err)

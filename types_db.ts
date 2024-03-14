@@ -71,10 +71,10 @@ export type Database = {
           cover: string | null
           created_at: string
           description: string | null
-          guid: string | null
           id: number
           rss: string | null
           source: string | null
+          status: number
           title: string | null
           user_id: string | null
           uuid: string
@@ -84,10 +84,10 @@ export type Database = {
           cover?: string | null
           created_at?: string
           description?: string | null
-          guid?: string | null
           id?: number
           rss?: string | null
           source?: string | null
+          status?: number
           title?: string | null
           user_id?: string | null
           uuid?: string
@@ -97,17 +97,17 @@ export type Database = {
           cover?: string | null
           created_at?: string
           description?: string | null
-          guid?: string | null
           id?: number
           rss?: string | null
           source?: string | null
+          status?: number
           title?: string | null
           user_id?: string | null
           uuid?: string
         }
         Relationships: [
           {
-            foreignKeyName: "feeds_user_id_fkey"
+            foreignKeyName: "public_feeds_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"

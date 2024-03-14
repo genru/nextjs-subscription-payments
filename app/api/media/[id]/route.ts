@@ -9,7 +9,6 @@ assert(process.env['DB_REDIS_URL'], 'DB_REDIS_URL should be set');
 const redis = new Redis(process.env['DB_REDIS_URL']);
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
-
     try {
         const body = await request.json();
         const mediaId = params.id;
@@ -48,17 +47,26 @@ async function updateMediaUrlInCache(feedId: string, url: string, guid: string, 
     const exist = (1===await redis.exists(key));
     const txt = await redis.get(key);
     if(!exist || !txt) {
+        console.warn('not exist or cache is empty');
         return;
     }
     try {
         const pod = JSON.parse(txt) as PodInfo;
         const item = pod.items.find(i => i.guid === guid);
         if(!item) {
+            console.warn('not found item', guid);
             return;
         }
         item.url =  url;
         item.itunesDuration = duration;
         item.enclosure && (item.enclosure.url = url) || (item.enclosure = {url: url, type:'audio/x-m4a', size:0});
+        if(!item.enclosure) {
+            item.enclosure = {url: url, type:'audio/x-m4a', size:0}
+        } else {
+            item.enclosure.size = 0;
+            item.enclosure.url = url;
+            item.enclosure.type = 'audio/x-m4a';
+        }
         await redis.set(key, JSON.stringify(pod), 'EX', 180);
     } catch (err) {
         console.error(err);
@@ -78,7 +86,7 @@ async function generateRssAndUpdateFeed(feedId: string) {
             const rss = new Podcast(pod.feed);
             pod.items.forEach((item) => rss.addItem(item));
             await updateFeedWithXml(feedId, rss.buildXml());
-            await redis.del(key);
+            // await redis.del(key);
         }
     } catch (err) {
         console.error(err);

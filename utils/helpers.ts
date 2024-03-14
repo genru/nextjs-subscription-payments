@@ -1,4 +1,9 @@
 import type { Tables } from '@/types_db';
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localeEn from "dayjs/locale/en"; // With a custom alias for the locale object
+
+
 
 type Price = Tables<'prices'>;
 
@@ -131,3 +136,10 @@ export const getErrorRedirect = (
     disableButton,
     arbitraryParams
   );
+
+const daysago = (postDate: string|number|undefined|null|dayjs.Dayjs): string => {
+    dayjs.extend(relativeTime).locale(localeEn)
+    var fromNowOn = dayjs(postDate).fromNow();
+    return(fromNowOn)
+ };
+export {daysago};

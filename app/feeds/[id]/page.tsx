@@ -1,8 +1,8 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from "next/navigation";
 import { Play, LayoutGrid, MoreVertical, ListOrdered, Sigma } from "lucide-react";
-import Card from "@/components/ui/Feed/Card";
-import { FeedInfo } from '@/components/ui/Feed/FeedInfo';
+import Card from "@/components/ui/Feed/Detail/Card";
+import { FeedInfo } from '@/components/ui/Feed/Detail/FeedInfo';
 import { getURL } from '@/utils/helpers';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 

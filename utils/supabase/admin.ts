@@ -315,7 +315,7 @@ const findFeed = async (feedId: string) => {
 }
 
 const updateFeedWithXml = async (feedId: string, feedXml: string) => {
-  const {error, data: feedData} = await supabaseAdmin.from('feeds').update({rss: feedXml}).eq('uuid', feedId).single();
+  const {error, data: feedData} = await supabaseAdmin.from('feeds').update({rss: feedXml, status: 1}).eq('uuid', feedId).single();
   return feedData;
 }
 

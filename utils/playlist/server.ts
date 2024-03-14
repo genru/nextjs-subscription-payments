@@ -58,34 +58,6 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
     }
     const feedItem: Item[] = [];
 
-    // const feed = new Podcast({
-    //   title: i?.title || '',
-    //   description: i?.description || '',
-    //   // feedUrl: i?.resourceId?.videoId || '',
-    //   feedUrl: feedUrl,
-    //   imageUrl: i?.thumbnails?.high?.url || '',
-    //   siteUrl: hostUrl,
-    //   author: i?.channelTitle || '',
-    //   categories: ['News', 'Sports'],
-    //   language: 'en',
-    //   // explicit: false,
-    //   itunesAuthor: 'Max Nowack',
-    //   itunesSubtitle: 'I am a sub title',
-    //   itunesSummary: 'I am a summary',
-    //   itunesOwner: { name: 'Max Nowack', email: 'max@unsou.de' },
-    //   itunesExplicit: false,
-    //   itunesCategory: [{
-    //     text: 'Entertainment',
-    //     subcats: [{
-    //       text: 'Television'
-    //     }]
-    //   }],
-    //   itunesImage: i?.thumbnails?.high?.url || 'http://example.com/image.png'
-    // });
-
-
-    // feed = await createFeed(data, userDetails.id, 'youtube');
-
     const resp = await youtube.playlistItems.list({
         part: ['snippet', 'id', 'contentDetails'],
         playlistId: playlist_id,
@@ -118,26 +90,6 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
                 itunesDuration: 12345,
                 itunesNewFeedUrl: 'https://newlocation.com/example.rss',
             });
-            // feed.addItem({
-            //     title: i?.title || '',
-            //     description: i?.description || '',
-            //     url: 'https://cdn.listenbox.app/a/pO_zFgNFmW9.m4a?show_id=Mv8WH2tRjoeO',
-            //     guid: i?.resourceId?.videoId || '',
-            //     date: i?.publishedAt || '',
-            //     author: i?.channelTitle || '',
-            //     enclosure: {
-            //         url: 'https://cdn.listenbox.app/a/pO_zFgNFmW9.m4a?show_id=Mv8WH2tRjoeO',
-            //         type: 'audio/x-m4a',
-            //         size: 0,
-            //     },
-            //     itunesTitle: i?.title || '',
-            //     itunesAuthor: i?.videoOwnerChannelTitle || 'Max Nowack',
-            //     itunesExplicit: false,
-            //     itunesSubtitle: 'I am a sub title',
-            //     itunesSummary: i?.description || 'I am a summary',
-            //     itunesDuration: 12345,
-            //     itunesNewFeedUrl: 'https://newlocation.com/example.rss',
-            // });
         }
 
     }

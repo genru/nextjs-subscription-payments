@@ -45,6 +45,7 @@ export async function signInWithEmail(formData: FormData) {
       'Invalid email address.',
       'Please try again.'
     );
+    return redirectPath;
   }
 
   const supabase = createClient();
