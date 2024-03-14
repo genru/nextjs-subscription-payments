@@ -1,7 +1,7 @@
 'use server'
 import { getErrorRedirect, getStatusRedirect } from "../helpers";
 import { processYoutubeMediaUrl } from "../playlist/aws";
-import { FeedInfo, PodInfo, parsePlaylist } from "../playlist/server";
+import { FeedInfo, PodInfo, parsePlaylist, parseVideos } from "../playlist/server";
 import { createFeed, createMedias } from "../supabase/admin";
 import { createClient } from "../supabase/server";
 import assert from "assert";
@@ -10,7 +10,7 @@ import Redis from "ioredis";
 assert(process.env['DB_REDIS_URL'], 'DB_REDIS_URL should be set');
 const redis = new Redis(process.env['DB_REDIS_URL']);
 
-export async function createFeedByPlaylist(formData: FormData) {
+export async function createFeedByYoutube(formData: FormData) {
     const targetUrl = String(formData.get('url')).trim();
 
     let redirectPath: string;
@@ -25,7 +25,8 @@ export async function createFeedByPlaylist(formData: FormData) {
     }
     const url = new URL(targetUrl);
     const playlist_id = url.searchParams.get('list');
-    if(!playlist_id) {
+    const video_id = url.searchParams.get('v');
+    if(!playlist_id && !video_id) {
         redirectPath = getErrorRedirect(
             '/feeds/',
             'Invalid url address.',
@@ -55,7 +56,19 @@ export async function createFeedByPlaylist(formData: FormData) {
     }
     let feed_uuid: string|undefined;
     try {
-        const pod: PodInfo = await parsePlaylist(playlist_id) || '';
+        let pod: PodInfo;
+        if(playlist_id) {
+            pod = await parsePlaylist(playlist_id) || '';
+        } else if (video_id) {
+            pod = await parseVideos(video_id) || '';
+        } else {
+            return getErrorRedirect(
+                '/feeds/',
+                'Invalid url address.',
+                'Please try again.'
+            );
+        }
+
 
         const feedRaw: FeedInfo = {
             title: pod.feed.title,
@@ -78,7 +91,7 @@ export async function createFeedByPlaylist(formData: FormData) {
                 author: item.author || 'unknown',
                 source: 'youtube',
                 guid: item.guid,
-                duration_in_sec: 0
+                duration_in_sec: +(item.itunesDuration || 0)
             })));
 
             if(ids.length > 0) {
@@ -119,6 +132,75 @@ export async function removeFeedByUuid(formData: FormData) {
     }
 
     return getStatusRedirect('/feeds', 'Success!', 'Feed removed successfully');
+}
+
+export async function addEpisodeByYoutube(formData: FormData) {
+    const feedId = formData.get('feed_id') as string;
+    const targetUrl = formData.get('url') as string;
+
+    if(!feedId || !targetUrl) {
+        return getErrorRedirect('/feeds', 'Ooops', 'Bad request');
+    }
+
+    // check URL
+    const url = new URL(targetUrl);
+    const video_id = url.searchParams.get('v');
+    if(!video_id) {
+        return getErrorRedirect(
+            `/feeds/${feedId}`,
+            'Invalid url address.',
+            'Please try again.'
+        );
+    }
+
+    const pod: PodInfo = await parseVideos(video_id);
+    const supabase = createClient();
+
+    let redirectPath: string;
+    const {
+        data: { user }
+    } = await supabase.auth.getUser();
+    if (!user) {
+
+        redirectPath = getErrorRedirect('/signin', 'Invalid user', 'Please try again.');
+        return redirectPath;
+    }
+
+    const { data: userDetails } = await supabase
+        .from('users')
+        .select('*')
+        .single();
+    if(!userDetails) {
+        console.warn('No user');
+        return getErrorRedirect('/signin', 'Invalid user', 'Please try again.');
+    }
+
+    if(feedId) {
+
+        const ids = await createMedias(feedId, pod.items.map(item => ({
+            title: item.title,
+            description: item.description,
+            cover: item.itunesImage || '',
+            author: item.author || 'poddiy',
+            source: 'youtube',
+            guid: video_id,
+            duration_in_sec: +(item.itunesDuration || 0)
+        })));
+
+        if(ids.length > 0) {
+            const itemsKey = `items:${feedId}`;
+            await redis.sadd(itemsKey, ids);
+            await redis.expire(itemsKey, 60 * 3);
+            for (let i = 0; i < ids.length; i++) {
+                processYoutubeMediaUrl(video_id, feedId, ids[i]).catch(console.error);
+            }
+        } else {
+            // NOTE: feed completed
+            await supabase.from('feeds').update({status: 1}).eq('uuid', feedId)
+        }
+    }
+
+    return getStatusRedirect(`/feeds/${feedId}/`, 'Congrated', 'new episode added');
 }
 
 function isValidUrl(url: string) {

@@ -16,7 +16,7 @@ export interface FeedInfo {
 }
 // export type { Feed, Item } from 'podcast';
 
-export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
+export async function parsePlaylist(playlist_id:string, pageSize:number = 15): Promise<PodInfo> {
     // youtube.playlists.list()
     const listresp = await youtube.playlists.list({
         part: ["snippet"],
@@ -61,8 +61,9 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
     const resp = await youtube.playlistItems.list({
         part: ['snippet', 'id', 'contentDetails'],
         playlistId: playlist_id,
-        maxResults: 15,
+        maxResults: pageSize,
     });
+
     const snippet = resp.data.items?.map((i) => i.snippet)
     const resources = snippet?.filter(i => i?.title!=='Private video')
     // console.info(resources)
@@ -94,4 +95,77 @@ export async function parsePlaylist(playlist_id:string): Promise<PodInfo> {
 
     }
     return {feed: feedInfo, items:feedItem};
+}
+
+export async function parseVideos(video_id: string): Promise<PodInfo> {
+    const video = await youtube.videos.list({
+        part: ["snippet",'contentDetails'],
+        "id": [
+            video_id
+        ]
+    });
+    const i = video.data.items?.[0].snippet;
+    const details = video.data.items?.[0].contentDetails;
+
+    const hostUrl = getURL();
+    const feedUrl = getURL('feed.xml');
+    const feedInfo: Feed = {
+        title: i?.title || '',
+        description: i?.description || '',
+        feedUrl: feedUrl,
+        imageUrl: i?.thumbnails?.high?.url || '',
+        siteUrl: hostUrl,
+        author: i?.channelTitle || '',
+        // categories: ['News', 'Sports'],
+        language: 'en',
+        // explicit: false,
+        itunesAuthor: 'poddiy',
+        itunesSubtitle: 'I am a sub title',
+        itunesSummary: 'I am a summary',
+        itunesOwner: { name: 'poddy', email: 'hi@poddiy.io' },
+        itunesExplicit: false,
+        itunesCategory: [{
+            text: 'Entertainment',
+            subcats: [{
+                text: 'Television'
+            }]
+        }],
+        itunesImage: i?.thumbnails?.high?.url || 'https://pub-864077fe49bd4dcc9c269108cb2dbbe3.r2.dev/itunes-default-thumbnail.png',
+        customNamespaces: {},
+        customElements: []
+    }
+    const feedItem: Item[] = [];
+    let duration: number = 0;
+    if(details?.duration) {
+        const arr = /PT(.{1,2})M(.{1,2})S/g.exec(details?.duration);
+        if(arr) {
+            const m = +arr[1];
+            const s = +arr[2];
+            duration = m * 60 + s;
+        }
+    }
+    feedItem.push({
+        title: i?.title || '',
+        description: i?.description || '',
+        url: 'https://cdn.listenbox.app/a/pO_zFgNFmW9.m4a?show_id=Mv8WH2tRjoeO',
+        guid: video_id,
+        date: i?.publishedAt || '',
+        author: i?.channelTitle || '',
+        enclosure: {
+            url: 'https://cdn.listenbox.app/a/pO_zFgNFmW9.m4a?show_id=Mv8WH2tRjoeO',
+            type: 'audio/x-m4a',
+            size: 0,
+        },
+        itunesImage: i?.thumbnails?.high?.url || 'https://pub-864077fe49bd4dcc9c269108cb2dbbe3.r2.dev/itunes-default-thumbnail.png',
+        itunesTitle: i?.title || '',
+        itunesAuthor: i?.channelTitle || 'Max Nowack',
+        itunesExplicit: false,
+        itunesSubtitle: 'I am a sub title',
+        itunesSummary: i?.description || 'I am a summary',
+        itunesDuration: duration,
+        itunesNewFeedUrl: 'https://newlocation.com/example.rss',
+    });
+
+    return {feed: feedInfo, items:feedItem};
+
 }
