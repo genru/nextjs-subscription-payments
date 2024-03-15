@@ -33,7 +33,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
         if(cnt === 0) {
             // no more media expected
             await redis.del(key);
-            await generateRssAndUpdateFeed(feedId);
+            // await generateRssAndUpdateFeed(feedId);
         }
         // also update feed rss
     } catch (err) {

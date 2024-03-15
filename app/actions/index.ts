@@ -66,7 +66,8 @@ export async function parseUrl(dataFrom: FormData) {
                 author: item.author || 'unknown',
                 source: 'youtube',
                 guid: item.guid,
-                duration_in_sec: 0
+                duration_in_sec: 0,
+                position: item.itunesEpisode
             })));
 
             if(ids.length > 0) {

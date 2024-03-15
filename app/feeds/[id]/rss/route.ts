@@ -75,6 +75,7 @@ const loadRss = cache(async (feed_uuid: string) => {
         itunesSubtitle: 'I am a sub title',
         itunesSummary: i?.description || 'I am a summary',
         itunesDuration: i.duration_in_sec,
+        itunesEpisode: i.position+1  // Where episode is a non-zero integer (1, 2, 3, etc.) representing your episode number.
         // itunesNewFeedUrl: 'https://newlocation.com/example.rss',  // https://help.apple.com/itc/podcasts_connect/#/itcb54353390
       });
     }

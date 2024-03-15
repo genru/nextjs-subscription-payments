@@ -97,6 +97,7 @@ export async function parsePlaylist(playlist_id:string, pageSize:number = 15): P
                     type: 'audio/x-m4a',
                     size: 0,
                 },
+                itunesEpisode: i?.position==null? undefined : i?.position,
                 itunesImage: i?.thumbnails?.high?.url || 'https://pub-864077fe49bd4dcc9c269108cb2dbbe3.r2.dev/itunes-default-thumbnail.png',
                 itunesTitle: i?.title || '',
                 itunesAuthor: i?.videoOwnerChannelTitle || 'Max Nowack',

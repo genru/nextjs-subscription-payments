@@ -360,8 +360,13 @@ const createMedia = async (media: {feed_id:string,title: string, description: st
   return mediaRow[0].id;
 }
 
-const createMedias = async (feedId: string, medias: {title: string, description: string, cover: string, author: string, source: string, guid: string, duration_in_sec: number}[]) => {
+const createMedias = async (feedId: string, medias: {title: string, description: string, cover: string, author: string, source: string, guid: string, duration_in_sec: number, position?: number}[]) => {
 
+  const positions = medias.reduce((a,i) => {a[i.guid]=i.position; return a}, {} as {[key: string]: number|undefined});
+  // make sure supabase accept media rows
+  medias.forEach((mediaRow) => {
+    delete mediaRow['position'];
+  });
   // check if media exists
   const {error: errorExists, data: existMediaRows} = await supabaseAdmin.from('media').select().in('guid', medias.map(i => i.guid)).select();
   if (errorExists) {
@@ -388,8 +393,8 @@ const createMedias = async (feedId: string, medias: {title: string, description:
     allMedias = [...allMedias, ...mediaRows];
   }
 
-  // link to same feed
-  const feed_medias = allMedias.map(i => ({feed_id: feedId, media_id: i.id}))
+  // link to feed with position
+  const feed_medias = allMedias.map(i => ({feed_id: feedId, media_id: i.id, position: positions[i.guid]}))
   const {error: feedMediaError} = await supabaseAdmin.from('feedMedia').insert(feed_medias);
   if (feedMediaError) {
     console.warn(feedMediaError, feedMediaError.message);
@@ -412,12 +417,17 @@ const updateMediaWithUrl = async (url: string, durationInSec: number, uuid: stri
 }
 
 const findFeedMedia = async (feedId: string) => {
-  const {data: mediaIds, error} = await supabaseAdmin.from('feedMedia').select('media_id').eq('feed_id', feedId);
+  const {data: mediaIds, error} = await supabaseAdmin.from('feedMedia').select('media_id, position').eq('feed_id', feedId);
   if (error) {
     console.warn(error, error && error.message);
     // console.error(`FeedMedia lookup failed: ${error}`);
     throw new Error(`FeedMedia lookup failed`);
   }
+  const positionMap = mediaIds.reduce((acc, id) => {
+    if(id.position!==null && id.position >=0) {
+      acc[id.media_id] = id.position;
+    }
+    return acc},{} as {[key:string]: number})
   const {data: medias, error: mediaError} = await supabaseAdmin.from('media').select("*").in('id', mediaIds.map(i=>i.media_id));
   if (mediaError) {
     console.warn(mediaError, mediaError && mediaError.message);
@@ -425,7 +435,7 @@ const findFeedMedia = async (feedId: string) => {
     throw new Error(`Media lookup failed:`);
   }
 
-  return medias;
+  return medias.map(i => ({...i, position: positionMap[i.id]}));
 }
 
 export {

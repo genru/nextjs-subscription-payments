@@ -37,16 +37,19 @@ export type Database = {
           feed_id: string
           id: number
           media_id: string
+          position: number | null
         }
         Insert: {
           feed_id: string
           id?: number
           media_id: string
+          position?: number | null
         }
         Update: {
           feed_id?: string
           id?: number
           media_id?: string
+          position?: number | null
         }
         Relationships: [
           {

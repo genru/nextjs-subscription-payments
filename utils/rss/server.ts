@@ -91,7 +91,8 @@ export async function createFeedByYoutube(formData: FormData) {
                 author: item.author || 'unknown',
                 source: 'youtube',
                 guid: item.guid,
-                duration_in_sec: +(item.itunesDuration || 0)
+                duration_in_sec: +(item.itunesDuration || 0),
+                position: item.itunesEpisode
             })));
 
             if(ids.length > 0) {
@@ -184,7 +185,8 @@ export async function addEpisodeByYoutube(formData: FormData) {
             author: item.author || 'poddiy',
             source: 'youtube',
             guid: video_id,
-            duration_in_sec: +(item.itunesDuration || 0)
+            duration_in_sec: +(item.itunesDuration || 0),
+            position: item.itunesEpisode
         })));
 
         if(ids.length > 0) {
