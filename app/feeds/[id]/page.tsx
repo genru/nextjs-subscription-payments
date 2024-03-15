@@ -94,7 +94,7 @@ function NavbarAction({...props}) {
                 <li>
                     <div>
                     Total episodes
-                    <span className="d-badge d-badge-md d-badge-primary">{props.episodes}</span>
+                    <span className="d-badge d-badge-sm d-badge-primary">{props.episodes}</span>
                     </div>
                 </li>
                 <li>

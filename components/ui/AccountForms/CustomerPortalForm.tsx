@@ -47,6 +47,7 @@ export default function CustomerPortalForm({ subscription }: Props) {
   return (
     <Card
       title="Your Plan"
+      subscription={subscription?.prices?.products?.name}
       description={
         subscription
           ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
