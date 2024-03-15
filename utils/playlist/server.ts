@@ -67,7 +67,7 @@ export async function parsePlaylist(playlist_id:string, pageSize:number = 15): P
 
     items = [...resp.data.items || []];
     let nextPageToken = resp.data.nextPageToken;
-    while (nextPageToken && false) {
+    while (nextPageToken && true) {
       let resp1 = await youtube.playlistItems.list({
         part: ['snippet', 'id', 'contentDetails'],
         playlistId: playlist_id,
