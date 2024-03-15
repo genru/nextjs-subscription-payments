@@ -2,7 +2,7 @@
 import { handleRequest } from "@/utils/rss/client";
 import { daysago } from "@/utils/helpers";
 import { removeFeedByUuid } from "@/utils/rss/server";
-import { Cake, Layers,Trash2 } from "lucide-react";
+import { CalendarDays, Layers,Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
@@ -37,7 +37,7 @@ export default function Card({...props}) {
                         <span className="d-badge d-badge-sm d-badge-primary">{feed.feedMedia?.length || 0}</span>
                     </li>
                     <li>
-                        <Cake width={18} height={18}/>
+                        <CalendarDays width={18} height={18}/>
                         created
                         <span className="d-badge d-badge-sm d-badge-outline d-badge-primary">{daysago(feed.created_at)}</span>
                     </li>
@@ -58,7 +58,7 @@ function NavbarAction({title, uuid, onDelete, disableDelete}) {
     return (
         <div className="d-navbar h-4 min-h-8 p-0 ">
             <div className="flex-1">
-                <h2 className="text-lg">{title}</h2>
+                <h2 className="text-lg leading-5">{title}</h2>
             </div>
             <div className="flex-none">
                 {disableDelete ? (

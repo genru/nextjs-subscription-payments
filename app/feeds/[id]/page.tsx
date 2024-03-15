@@ -1,10 +1,10 @@
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from "next/navigation";
-import { ArrowDownWideNarrow } from "lucide-react";
-import Card from "@/components/ui/Feed/Detail/Card";
+import { ArrowDownWideNarrow, Cake, CalendarDays, Layers } from "lucide-react";
 import { FeedInfo } from '@/components/ui/Feed/Detail/FeedInfo';
 import { daysago, getURL } from '@/utils/helpers';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import CardList from '@/components/ui/Feed/Detail/CardList';
 
 export default async function Feed({params}:{params:{id:string}}) {
 
@@ -61,7 +61,6 @@ export default async function Feed({params}:{params:{id:string}}) {
       throw new Error(`Media lookup failed:`);
     }
 
-
     return (
         <section className='container m-auto px-4 w-full mb-32 py-8 sm:pt-8'>
         <Breadcrumbs className="mb-4" paths={[{href:'/',title: 'Home'}, {href:'/feeds', title: "My Feeds"}, {href:'#', title: feed.title}]}/>
@@ -74,9 +73,7 @@ export default async function Feed({params}:{params:{id:string}}) {
                 cover={feed.cover}
                 author={feed.author}
                 rss={getURL(`feeds/${feed.uuid}/rss`)}/>
-            <div className="flex flex-col items-start flex-grow-1 px-12 gap-3 mt-4 w-full overflow-y-scroll">
-                {medias.map(i => (<Card title={i.title} description={i.author} audioSrc={i.url} cover={i.cover} key={i.url} />))}
-            </div>
+            <CardList medias={medias}/>
         </div>
 
         </section>
@@ -88,19 +85,21 @@ function NavbarAction({...props}) {
     return (
         <div className="d-navbar h-4 min-h-8 mb-4">
         <div className="flex-1">
-            <h2 className="text-2xl">{props.title}</h2>
-            <div className="text-base-content font-extralight">
+            <h2 className="text-2xl max-w-[680px]">{props.title}</h2>
+            <div className="text-base-content font-extralight w-[26rem]">
                 <ul className="d-menu pointer-events-none lg:d-menu-horizontal d-rounded-box rounded-xl">
                 <li>
-                    <div>
-                    Total episodes
-                    <span className="d-badge d-badge-sm d-badge-primary">{props.episodes}</span>
+                    <div className='flex'>
+                        <span className='invisible xl:visible'>Total episodes</span>
+                        <span className=''><Layers width={18} height={18}/></span>
+                        <span className="d-badge d-badge-sm d-badge-primary">{props.episodes}</span>
                     </div>
                 </li>
                 <li>
-                    <div>
-                    Created
-                    <span className="d-badge d-badge-sm d-badge-primary">{daysago(props.created)}</span>
+                    <div className="flex">
+                        <span className='invisible xl:visible'>Created</span>
+                        <span className=''><CalendarDays width={18} height={18}/></span>
+                        <span className="d-badge d-badge-sm d-badge-primary">{daysago(props.created)}</span>
                     </div>
                 </li>
                 </ul>

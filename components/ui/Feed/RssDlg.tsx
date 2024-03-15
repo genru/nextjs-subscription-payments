@@ -32,7 +32,7 @@ export default function RssDlg({...props}) {
           value={props.rssLink}
         />
         <button
-          className="d-join-item d-btn d-btn-neural w-32"
+          className="d-join-item d-btn d-btn-neural w-28"
           onClick={toggleCopyButton}
         >
           {copyText == 'copied' && (
@@ -46,7 +46,7 @@ export default function RssDlg({...props}) {
         </button>
       </div>
       <div className="d-modal-action">
-        <a href={props.rssLink.replace('http:', 'podcast:')} className="d-btn d-btn-primary d-btn-outline">Open in Podcast</a>
+        <a href={props.rssLink.replace('http:', 'podcast:')} className="d-btn d-btn-primary d-btn-outline" autoFocus>Open in Podcast</a>
         <form method="dialog">
           {/* if there is a button in form, it will close the modal */}
           <button className="d-btn">Close</button>

@@ -1,9 +1,6 @@
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Grid from "@/components/ui/Feed/Grid";
-import NavbarAction from "@/components/ui/Feed/NavbarAction";
 import { createClient } from "@/utils/supabase/server";
-import { Trash2, FilePlus, Music4 } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Feeds() {
