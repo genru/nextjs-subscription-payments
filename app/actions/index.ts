@@ -1,6 +1,6 @@
 import { processYoutubeMediaUrl } from "@/utils/playlist/aws";
 import { FeedInfo, PodInfo, parsePlaylist } from "@/utils/playlist/server";
-import { createFeed, createMedia, createMedias } from "@/utils/supabase/admin";
+import { createFeed, createMedias } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
 import assert from "assert";
 import Redis from "ioredis";
@@ -59,7 +59,6 @@ export async function parseUrl(dataFrom: FormData) {
             const itemsKey = `items:${feed_uuid}`;
             await redis.set(podKey, JSON.stringify(pod), 'EX', 180);
 
-            // TODO: save items in one shot
             const ids = await createMedias(feed_uuid, pod.items.map(item => ({
                 title: item.title,
                 description: item.description,
