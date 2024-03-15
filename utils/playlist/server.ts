@@ -58,13 +58,28 @@ export async function parsePlaylist(playlist_id:string, pageSize:number = 15): P
     }
     const feedItem: Item[] = [];
 
+    let items = [];
     const resp = await youtube.playlistItems.list({
         part: ['snippet', 'id', 'contentDetails'],
         playlistId: playlist_id,
         maxResults: pageSize,
     });
 
-    const snippet = resp.data.items?.map((i) => i.snippet)
+    items = [...resp.data.items || []];
+    let nextPageToken = resp.data.nextPageToken;
+    while (nextPageToken && false) {
+      let resp1 = await youtube.playlistItems.list({
+        part: ['snippet', 'id', 'contentDetails'],
+        playlistId: playlist_id,
+        maxResults: 50,
+        pageToken: nextPageToken,
+      })
+      items = [...items, ...resp1.data.items || []];
+      nextPageToken = resp1.data.nextPageToken;
+    }
+
+
+    const snippet = items.map((i) => i.snippet)
     const resources = snippet?.filter(i => i?.title!=='Private video')
     // console.info(resources)
     if (resources && resources.length > 0) {
@@ -135,15 +150,6 @@ export async function parseVideos(video_id: string): Promise<PodInfo> {
         customElements: []
     }
     const feedItem: Item[] = [];
-    let duration: number = 0;
-    if(details?.duration) {
-        const arr = /PT(.{1,2})M(.{1,2})S/g.exec(details?.duration);
-        if(arr) {
-            const m = +arr[1];
-            const s = +arr[2];
-            duration = m * 60 + s;
-        }
-    }
     feedItem.push({
         title: i?.title || '',
         description: i?.description || '',
@@ -162,10 +168,23 @@ export async function parseVideos(video_id: string): Promise<PodInfo> {
         itunesExplicit: false,
         itunesSubtitle: 'I am a sub title',
         itunesSummary: i?.description || 'I am a summary',
-        itunesDuration: duration,
+        itunesDuration: ytDuration2Sec(details?.duration),
         itunesNewFeedUrl: 'https://newlocation.com/example.rss',
     });
 
     return {feed: feedInfo, items:feedItem};
 
+}
+
+function ytDuration2Sec(pt : string|undefined|null) {
+    let seconds: number = 0;
+    if(pt) {
+        const arr = /PT(.{1,2})M(.{1,2})S/g.exec(pt);
+        if(arr) {
+            const m = +arr[1];
+            const s = +arr[2];
+            seconds = m * 60 + s;
+        }
+    }
+    return seconds;
 }
