@@ -3,8 +3,9 @@ import { stripe } from '@/utils/stripe/config';
 import { createClient } from '@supabase/supabase-js';
 import { randomUUID } from 'crypto';
 import Stripe from 'stripe';
-import type { Database, Tables, TablesInsert } from 'types_db';
+import type { Database, Json, Tables, TablesInsert } from 'types_db';
 import { FeedInfo } from '../playlist/server';
+import { PriceNotification, ProductNotification } from '@paddle/paddle-node-sdk';
 // import { Stream } from 'stream';
 
 type Product = Tables<'products'>;
@@ -20,15 +21,28 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
-const upsertProductRecord = async (product: Stripe.Product) => {
-  const productData: Product = {
-    id: product.id,
-    active: product.active,
-    name: product.name,
-    description: product.description ?? null,
-    image: product.images?.[0] ?? null,
-    metadata: product.metadata
-  };
+const upsertProductRecord = async (product: Stripe.Product|ProductNotification) => {
+  let productData: Product
+  if('active' in product) {
+    productData = {
+      id: product.id,
+      active: product.active,
+      name: product.name,
+      description: product.description,
+      image: product.images?.[0] ?? null,
+      metadata: product.metadata
+    };
+  } else {
+    productData = {
+      id: product.id,
+      active: product.status=='active',
+      name: product.name,
+      description: product.description,
+      image: product.imageUrl,
+      metadata: product.customData as Json
+    };
+
+  }
 
   const { error: upsertError } = await supabaseAdmin
     .from('products')
@@ -39,23 +53,40 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 };
 
 const upsertPriceRecord = async (
-  price: Stripe.Price,
+  price: Stripe.Price | PriceNotification,
   retryCount = 0,
   maxRetries = 3
 ) => {
-  const priceData: Price = {
-    id: price.id,
-    description: '',
-    metadata: price.metadata,
-    product_id: typeof price.product === 'string' ? price.product : '',
-    active: price.active,
-    currency: price.currency,
-    type: price.type,
-    unit_amount: price.unit_amount ?? null,
-    interval: price.recurring?.interval ?? null,
-    interval_count: price.recurring?.interval_count ?? null,
-    trial_period_days: price.recurring?.trial_period_days ?? TRIAL_PERIOD_DAYS
-  };
+  let priceData: Price;
+  if('active' in price) {
+    priceData = {
+      id: price.id,
+      description: '',
+      metadata: price.metadata,
+      product_id: typeof price.product === 'string' ? price.product : '',
+      active: price.active,
+      currency: price.currency,
+      type: price.type,
+      unit_amount: price.unit_amount ?? null,
+      interval: price.recurring?.interval ?? null,
+      interval_count: price.recurring?.interval_count ?? null,
+      trial_period_days: price.recurring?.trial_period_days ?? TRIAL_PERIOD_DAYS
+    };
+  } else {
+    priceData = {
+      id: price.id,
+      description: price.description,
+      metadata: price.customData as Json,
+      product_id: price.productId,
+      active: price.status === 'active',
+      currency: price.unitPrice.currencyCode.toLowerCase(),
+      type: price.billingCycle?'recurring': 'one_time',
+      unit_amount: +price.unitPrice.amount,
+      interval: price.billingCycle?.interval ?? null,
+      interval_count: price.billingCycle?.frequency ?? null,
+      trial_period_days: price.trialPeriod?.frequency ?? TRIAL_PERIOD_DAYS
+    };
+  }
 
   const { error: upsertError } = await supabaseAdmin
     .from('prices')
@@ -78,7 +109,7 @@ const upsertPriceRecord = async (
   }
 };
 
-const deleteProductRecord = async (product: Stripe.Product) => {
+const deleteProductRecord = async (product: Stripe.Product | ProductNotification) => {
   const { error: deletionError } = await supabaseAdmin
     .from('products')
     .delete()
@@ -88,7 +119,7 @@ const deleteProductRecord = async (product: Stripe.Product) => {
   console.log(`Product deleted: ${product.id}`);
 };
 
-const deletePriceRecord = async (price: Stripe.Price) => {
+const deletePriceRecord = async (price: Stripe.Price | PriceNotification) => {
   const { error: deletionError } = await supabaseAdmin
     .from('prices')
     .delete()

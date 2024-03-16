@@ -20,7 +20,14 @@ export default async function Feeds() {
         .from('users')
         .select('*')
         .single();
-
+    const { data: subscription } = await supabase
+        .from('subscriptions')
+        .select('*, prices(*, products(*))')
+        .in('status', ['trialing', 'active'])
+        .maybeSingle();
+    if(subscription) {
+        console.info(`user have an active subscription "${subscription.prices?.products?.name}" will be end at ${subscription.ended_at}`)
+    }
     const { data: feeds, error } = await supabase
         .from('feeds')
         .select('*, feedMedia(feed_id)').eq('user_id', user.id);

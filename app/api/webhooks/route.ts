@@ -7,6 +7,7 @@ import {
   deleteProductRecord,
   deletePriceRecord
 } from '@/utils/supabase/admin';
+import { processPaddleEvent } from '@/utils/paddle/server';
 
 const relevantEvents = new Set([
   'product.created',
@@ -22,6 +23,24 @@ const relevantEvents = new Set([
 ]);
 
 export async function POST(req: Request) {
+  let resp: Response;
+  const isStripe = req.headers.has('stripe-signature');
+  const isPaddle = req.headers.has('paddle-signature');
+  if(isStripe) {
+    console.log('stripe event received');
+    resp = await processStripeEvent(req);
+  } else if(isPaddle){
+    resp = await processPaddleEvent(req);
+  } else {
+    console.log(req.headers);
+    console.log(await req.text());
+    resp =  new Response('not found', { status: 404 })
+  }
+
+  return resp;
+}
+
+async function processStripeEvent(req: Request) {
   const body = await req.text();
   const sig = req.headers.get('stripe-signature') as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -38,6 +57,7 @@ export async function POST(req: Request) {
   }
 
   if (relevantEvents.has(event.type)) {
+    console.log('✅',event.data.object)
     try {
       switch (event.type) {
         case 'product.created':
@@ -93,4 +113,6 @@ export async function POST(req: Request) {
     });
   }
   return new Response(JSON.stringify({ received: true }));
+
 }
+

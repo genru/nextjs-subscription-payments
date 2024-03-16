@@ -1,6 +1,5 @@
 'use client';
 
-import Button from '@/components/ui/Button';
 import LogoCloud from '@/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
 import { getStripe } from '@/utils/stripe/client';
@@ -10,6 +9,7 @@ import { User } from '@supabase/supabase-js';
 import cn from 'classnames';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { usePaddle } from '@/utils/paddle/client';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;
@@ -41,12 +41,22 @@ export default function Pricing({ user, products, subscription }: Props) {
     )
   );
   const router = useRouter();
+  const paddle = usePaddle();
+
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
 
   const handleStripeCheckout = async (price: Price) => {
+    // console.info('paddle is', paddle);
+    paddle?.Checkout.open({items:[{priceId: price.id}], settings: {
+      displayMode: "overlay",
+      theme: "light",
+      locale: "en",
+      allowLogout: false
+    },})
+    return;
     setPriceIdLoading(price.id);
 
     if (!user) {
@@ -182,7 +192,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                         /{billingInterval}
                       </span>
                     </p>
-                    <button className='d-btn d-btn-primary d-btn-wide'>
+                    <button className='d-btn d-btn-primary d-btn-wide' onClick={() => handleStripeCheckout(price)}>
                       {subscription ? 'Manage' : 'Subscribe'}
                     </button>
                   </div>
