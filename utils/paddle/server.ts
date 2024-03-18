@@ -9,7 +9,7 @@ export async function processPaddleEvent(req: Request) {
         // If express returned a JSON, remove any other middleware that might have processed raw request to object
         const rawRequestBody = await req.text();
 
-        const secretKey = process.env['WEBHOOK_SECRET_KEY'] || 'pdl_ntfset_01hs2gaevfgcdq85qs6pwzwh6h_XPI2P+DGCUo1VEmNRbhyK9JvZpTGi4Q9';
+        const secretKey = process.env['PADDLE_WEBHOOK_SECRET_KEY'] || '';
 
         // const c = await paddle.customers.create({email: '', name:""});
         // paddle.pricingPreview()

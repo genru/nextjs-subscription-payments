@@ -48,8 +48,7 @@ export default function Pricing({ user, products, subscription }: Props) {
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
 
-  const handleStripeCheckout = async (price: Price) => {
-    // console.info('paddle is', paddle);
+  const handlePaddleCheckout = (price: Price) => {
     paddle?.Checkout.open({items:[{priceId: price.id}], settings: {
       displayMode: "overlay",
       theme: "light",
@@ -57,6 +56,10 @@ export default function Pricing({ user, products, subscription }: Props) {
       allowLogout: false
     },})
     return;
+  }
+
+  const handleStripeCheckout = async (price: Price) => {
+    // console.info('paddle is', paddle);
     setPriceIdLoading(price.id);
 
     if (!user) {

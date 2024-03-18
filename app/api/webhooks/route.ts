@@ -8,6 +8,7 @@ import {
   deletePriceRecord
 } from '@/utils/supabase/admin';
 import { processPaddleEvent } from '@/utils/paddle/server';
+import { processLemonEvent } from '@/utils/lemonsquezzy/server';
 
 const relevantEvents = new Set([
   'product.created',
@@ -26,11 +27,14 @@ export async function POST(req: Request) {
   let resp: Response;
   const isStripe = req.headers.has('stripe-signature');
   const isPaddle = req.headers.has('paddle-signature');
+  const isLemon = req.headers.has('X-Signature');
   if(isStripe) {
     console.log('stripe event received');
     resp = await processStripeEvent(req);
   } else if(isPaddle){
     resp = await processPaddleEvent(req);
+  } else if(isLemon){
+    resp = await processLemonEvent(req);
   } else {
     console.log(req.headers);
     console.log(await req.text());

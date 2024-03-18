@@ -1,5 +1,5 @@
 'use client'
-import { Suspense, useState } from "react";
+import { Key, Suspense, useState } from "react";
 import Card from "./Card";
 
 export default function CardList({...props}) {
@@ -23,7 +23,7 @@ export default function CardList({...props}) {
 
     return (
         <div className="flex flex-col items-start flex-grow-1 px-12 gap-3 mt-4 w-full overflow-y-scroll">
-            {mediaLoaded.map(i => (<Card title={i.title} description={i.author} audioSrc={i.url} cover={i.cover} key={i.url} />))}
+            {mediaLoaded.map((i: { title: any; author: any; url: Key | null | undefined; cover: any; }) => (<Card title={i.title} description={i.author} audioSrc={i.url} cover={i.cover} key={i.url} />))}
             <button className='d-btn d-btn-outline d-btn-wide self-center' onClick={() => loadNextPage()} disabled={!enableLoadBtn}>{enableLoadBtn ? "load more":"no more episodes"}</button>
         </div>
     )
