@@ -5,7 +5,7 @@ import { BaseSyntheticEvent, useState } from "react";
 
 export default function NavbarAction({...props}) {
     function toggleNewModal(e: BaseSyntheticEvent) {
-        // console.info(e);
+        return;
         const modal = document.querySelector('#modal_new');
         // @ts-ignore
         modal?.showModal();
