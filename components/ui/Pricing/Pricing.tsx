@@ -195,7 +195,7 @@ export default function Pricing({ user, products, subscription }: Props) {
                         /{billingInterval}
                       </span>
                     </p>
-                    <button className='d-btn d-btn-primary d-btn-wide' onClick={() => handleStripeCheckout(price)}>
+                    <button className='d-btn d-btn-primary d-btn-wide' onClick={() => handlePaddleCheckout(price)}>
                       {subscription ? 'Manage' : 'Subscribe'}
                     </button>
                   </div>
