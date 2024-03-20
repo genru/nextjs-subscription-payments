@@ -10,7 +10,6 @@ import { postData } from '@/utils/helpers';
 export default function AuthForm({ userName }: { userName: string }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log('submitting');
     setIsSubmitting(true);
@@ -36,11 +35,11 @@ export default function AuthForm({ userName }: { userName: string }) {
 
   return (
     <Card
-      title="Your Youtube Account"
+      title="Your Youtube Channel"
       description="Please enter your full name, or a display name you are comfortable with."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">64 characters maximum</p>
+          <p className="pb-4 sm:pb-0">bind youtube channel</p>
           <button className='d-btn d-btn-neutral d-btn-wide' type="submit" form="authForm">
             {isSubmitting? (<span className="d-loading d-loading-spinner"></span>): "Request permit"}
           </button>
@@ -71,7 +70,7 @@ export default function AuthForm({ userName }: { userName: string }) {
           <input
             type="hidden"
             name="redirect_uri"
-            value={'https://1f4a-42-3-25-12.ngrok-free.app/auth/callback'}
+            value={'https://poddiy.xyz/auth/callback'}
             className="w-1/2 p-3 rounded-md d-input d-input-bordered"
           />
         </form>
