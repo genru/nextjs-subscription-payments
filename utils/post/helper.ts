@@ -6,7 +6,7 @@ import html from "remark-html";
 
 import { join } from "path";
 
-const postsDirectory = join(process.cwd(), "_posts");
+// const postsDirectory = join(process.cwd(), "_posts");
 
 export type Post = {
     slug: string;
@@ -21,12 +21,13 @@ export type Post = {
     content: string;
     preview?: boolean;
   };
-export function getPostSlugs() {
-  return fs.readdirSync(postsDirectory);
+export function getPostSlugs(rootDir: string="_posts") {
+  return fs.readdirSync(join(process.cwd(), rootDir));
 }
 
-export function getPostBySlug(slug: string) {
+export function getPostBySlug(slug: string, rootDir: string="_posts") {
   const realSlug = slug.replace(/\.md$/, "");
+  const postsDirectory = join(process.cwd(), rootDir);
   const fullPath = join(postsDirectory, `${realSlug}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
@@ -34,10 +35,10 @@ export function getPostBySlug(slug: string) {
   return { ...data, slug: realSlug, content } as Post;
 }
 
-export function getAllPosts(): Post[] {
-  const slugs = getPostSlugs();
+export function getAllPosts(rootDir: string="_posts"): Post[] {
+  const slugs = getPostSlugs(rootDir);
   const posts = slugs
-    .map((slug) => getPostBySlug(slug))
+    .map((slug) => getPostBySlug(slug, rootDir))
     // sort posts by date in descending order
     .sort((post1, post2) => (post1.date > post2.date ? -1 : 1));
   return posts;
