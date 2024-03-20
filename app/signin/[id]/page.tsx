@@ -101,7 +101,7 @@ export default async function SignIn({
             viewProp !== 'signup' &&
             allowOauth && (
               <>
-                <Separator text="Third-party sign-in" />
+                <Separator text="Or sign in with" />
                 <OauthSignIn />
               </>
             )}
