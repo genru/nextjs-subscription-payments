@@ -1,3 +1,4 @@
+import AuthForm from '@/components/ui/AccountForms/AuthForm';
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
@@ -46,6 +47,7 @@ export default async function Account() {
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />
         <EmailForm userEmail={user.email} />
+        <AuthForm userName={'youtube'}/>
       </div>
     </section>
   );
