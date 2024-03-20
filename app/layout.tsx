@@ -11,7 +11,7 @@ import Script from 'next/script';
 
 const meta = {
   title: 'Poddiy DIY your podcast in 10 seconds',
-  description: 'Poddiy make youtube into podcast effortlessly, listen youtube channels in your podcast',
+  description: 'Poddiy make youtube into podcast effortlessly, publish your youtube channels in your podcast enthusiasts',
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
@@ -23,10 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
     title: meta.title,
     description: meta.description,
     referrer: 'origin-when-cross-origin',
-    keywords: ['Vercel', 'Supabase', 'Next.js', 'Stripe', 'Subscription'],
-    authors: [{ name: 'Vercel', url: 'https://vercel.com/' }],
-    creator: 'Vercel',
-    publisher: 'Vercel',
+    keywords: ['Podcast maker', 'youtube', 'podcast host', 'episodes', 'Subscription'],
+    authors: [{ name: 'poddiy', url: 'https://poddiy.xyz/' }],
+    creator: 'poddiy',
+    publisher: 'poddiy',
     robots: meta.robots,
     icons: { icon: meta.favicon },
     metadataBase: new URL(meta.url),
