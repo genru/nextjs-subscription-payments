@@ -81,6 +81,15 @@ export default function Footer() {
                 Terms of Use
               </Link>
             </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/legal/refund"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Refund Policy
+              </Link>
+            </li>
+
           </ul>
         </div>
         <div className="flex items-start col-span-1 text-white lg:col-span-6 lg:justify-end">

@@ -44,4 +44,4 @@ We may update this Privacy Policy from time to time. We will notify you of any c
 
 **Contact Us**
 
-If you have any questions about this Privacy Policy, please contact us at [info@poddiy.xyz](mailto:info@poddiy.xyz)
+If you have any questions about this Privacy Policy, please contact us at [help@poddiy.xyz](mailto:help@poddiy.xyz)

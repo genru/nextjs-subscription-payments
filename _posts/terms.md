@@ -1,5 +1,5 @@
 ---
-title: "User Terms and Conditions"
+title: "Terms of Service"
 excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus."
 coverImage: "/assets/blog/hello-world/cover.jpg"
 date: "2020-03-16T05:35:07.322Z"
@@ -37,5 +37,5 @@ We may update these Terms from time to time. We'll notify you of any changes.
 
 **5. Contact Us**
 
-If you have any questions, contact us at [info@poddiy.xyz](mailto:info@poddiy.xyz).
+If you have any questions, contact us at [help@poddiy.xyz](mailto:help@poddiy.xyz).
 
