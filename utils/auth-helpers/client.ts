@@ -58,6 +58,7 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
       redirectTo: redirectURL,
       queryParams: {
         prompt: 'select_account',
+        access_type: 'offline'
       }
     }
   });
