@@ -69,14 +69,14 @@ export async function linkUserIdentity(e: React.FormEvent<HTMLFormElement>) {
   const scope = String(formData.get('scope')).trim();
   console.info('link user identity', provider, scope);
   // const supabase = createClient();
-  const redirectURL = getURL('/auth/callback');
+  const redirectURL = getURL('/auth/google');
   const resp = await supabase.auth.linkIdentity({
     provider: provider,
     options: {
       scopes: scope,
       redirectTo: redirectURL,
       queryParams: {
-        prompt: 'consent',
+        prompt: 'select_account',
       }
     }
   });
