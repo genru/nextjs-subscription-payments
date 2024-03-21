@@ -2,7 +2,7 @@
 
 import Card from '@/components/ui/Card';
 import { updateName } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
+import { handleRequest, linkUserIdentity } from '@/utils/auth-helpers/client';
 import { useRouter, redirect } from 'next/navigation';
 import { useState } from 'react';
 import { postData } from '@/utils/helpers';
@@ -11,8 +11,9 @@ export default function AuthForm({ userName }: { userName: string }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log('submitting');
+    console.log('submitting', e.currentTarget);
     setIsSubmitting(true);
+    await linkUserIdentity(e)
     // Check if the new name is the same as the old name
     // if (e.currentTarget.fullName.value === userName) {
     //   e.preventDefault();
@@ -48,11 +49,11 @@ export default function AuthForm({ userName }: { userName: string }) {
       }
     >
       <div className="mt-8 mb-4 text-xl font-semibold">
-        <form id="authForm" onSubmit={handleSubmit} method='GET' action='https://accounts.google.com/o/oauth2/v2/auth'>
+        <form id="authForm" onSubmit={handleSubmit} >
           <input
             type="hidden"
-            name="client_id"
-            value={'583784763044-e9da75e7gmp3g7u2homee1rdhjr37c76.apps.googleusercontent.com'}
+            name="provider"
+            value={'google'}
             className="w-1/2 p-3 rounded-md d-input d-input-bordered"
           />
           <input
