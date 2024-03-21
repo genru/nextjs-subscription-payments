@@ -31,13 +31,29 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
   const formData = new FormData(e.currentTarget);
   const provider = String(formData.get('provider')).trim() as Provider;
-
   // Create client-side supabase client and call signInWithOAuth
   const supabase = createClient();
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.info(event, session);
+    if (session && session.provider_token) {
+      window.localStorage.setItem('oauth_provider_token', session.provider_token)
+    }
+
+    if (session && session.provider_refresh_token) {
+      window.localStorage.setItem('oauth_provider_refresh_token', session.provider_refresh_token)
+    }
+
+    if (event === 'SIGNED_OUT') {
+      window.localStorage.removeItem('oauth_provider_token')
+      window.localStorage.removeItem('oauth_provider_refresh_token')
+    }
+  })
+
   const redirectURL = getURL('/auth/callback');
   await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
+      scopes: "https://www.googleapis.com/auth/youtube.readonly",
       redirectTo: redirectURL
     }
   });

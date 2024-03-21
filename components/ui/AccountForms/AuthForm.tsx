@@ -64,13 +64,13 @@ export default function AuthForm({ userName }: { userName: string }) {
           <input
             type="hidden"
             name="response_type"
-            value={'token'}
+            value={'code'}
             className="w-1/2 p-3 rounded-md d-input d-input-bordered"
           />
           <input
             type="hidden"
             name="redirect_uri"
-            value={'https://poddiy.xyz/auth/callback'}
+            value={'http://localhost:3000/auth/callback'}
             className="w-1/2 p-3 rounded-md d-input d-input-bordered"
           />
         </form>
