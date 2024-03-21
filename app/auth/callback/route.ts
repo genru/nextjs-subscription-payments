@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = createClient();
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
+    localStorage.setItem('provider_token',data.session?.provider_token || 'no token');
     if (error) {
       return NextResponse.redirect(
         getErrorRedirect(
