@@ -57,7 +57,7 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
       scopes: "https://www.googleapis.com/auth/youtube.readonly",
       redirectTo: redirectURL,
       queryParams: {
-        prompt: 'select_account',
+        prompt: 'consent',
         access_type: 'offline'
       }
     }
