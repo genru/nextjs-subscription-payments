@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const supabase = createClient();
 
     const { error, data } = await supabase.auth.exchangeCodeForSession(code);
-    localStorage.setItem('provider_token',data.session?.provider_token || 'no token');
+    window.localStorage.setItem('provider_token',data.session?.provider_token || 'no token');
     if (error) {
       return NextResponse.redirect(
         getErrorRedirect(
