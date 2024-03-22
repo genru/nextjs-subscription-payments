@@ -310,6 +310,7 @@ export type Database = {
           full_name: string | null
           id: string
           payment_method: Json | null
+          yt_channel: Json | null
         }
         Insert: {
           avatar_url?: string | null
@@ -317,6 +318,7 @@ export type Database = {
           full_name?: string | null
           id: string
           payment_method?: Json | null
+          yt_channel?: Json | null
         }
         Update: {
           avatar_url?: string | null
@@ -324,6 +326,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           payment_method?: Json | null
+          yt_channel?: Json | null
         }
         Relationships: [
           {
