@@ -17,7 +17,6 @@ export interface FeedInfo {
 // export type { Feed, Item } from 'podcast';
 
 export async function parsePlaylist(playlist_id:string, pageSize:number = 15): Promise<PodInfo> {
-    // youtube.playlists.list()
     const listresp = await youtube.playlists.list({
         part: ["snippet"],
         "id": [

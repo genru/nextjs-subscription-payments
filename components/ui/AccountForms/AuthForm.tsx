@@ -1,37 +1,53 @@
 'use client';
 
 import Card from '@/components/ui/Card';
-import { updateName } from '@/utils/auth-helpers/server';
-import { handleRequest, linkUserIdentity } from '@/utils/auth-helpers/client';
 import { useRouter, redirect } from 'next/navigation';
-import { useState } from 'react';
-import { postData } from '@/utils/helpers';
+import { useEffect, useState } from 'react';
+import { getStatusRedirect, getURL, postData } from '@/utils/helpers';
+import { getAuthorizationUrl } from '@/utils/google/server';
 
 export default function AuthForm({ userName }: { userName: string }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log('submitting', e.currentTarget);
-    setIsSubmitting(true);
-    await linkUserIdentity(e)
-    // Check if the new name is the same as the old name
-    // if (e.currentTarget.fullName.value === userName) {
-    //   e.preventDefault();
-    //   setIsSubmitting(false);
-    //   return;
-    // }
-    // handleRequest(e, updateName, router);
+  const [authUrl, setAuthUrl] = useState('');
 
-    // const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-    // url.searchParams.append("client_id", '583784763044-e9da75e7gmp3g7u2homee1rdhjr37c76.apps.googleusercontent.com');
-    // url.searchParams.append("response_type", 'token');
-    // url.searchParams.append("scope", 'https://www.googleapis.com/auth/youtube.readonly');
-    // url.searchParams.append("prompt", 'consent');
-    // url.searchParams.append("redirect_uri", 'https://1f4a-42-3-25-12.ngrok-free.app/auth/callback');
-    // console.info(url.toString())
-    // // alert(url.toString())
-    // router.push(url.toString());
-    setIsSubmitting(false);
+  useEffect(() => {
+    getAuthorizationUrl().then(url => {
+        setAuthUrl(url);
+    });
+  })
+// console.info('mount authForm')
+    let popup: Window | null = null;
+    const redirect_uri = getURL('/auth/google');
+    // const checkPopup = setInterval(() => {
+    //     console.info(popup?.window.location.href)
+    //     if(popup?.window.location.href.includes(redirect_uri)) {
+    //         popup.close();
+    //     }
+    //     if(!popup || !popup.closed) return;
+    //     clearInterval(checkPopup);
+    // }, 1000);
+
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>|null) => {
+    // console.log('submitting', e.currentTarget);
+    setIsSubmitting(true);
+    try {
+        popup = window.open(authUrl, "popup", "popup=true, height=" + 700 + ", width=" + 600);
+        const checkPopup = setInterval(() => {
+            if(popup?.window.location.href.includes(redirect_uri)) {
+                popup.close();
+            }
+            if(!popup || !popup.closed) return;
+            clearInterval(checkPopup);
+            setIsSubmitting(false);
+            const redirectPath = getStatusRedirect('/', 'Success!', 'Youtube are connected.');
+            router.push(redirectPath);
+        },1000)
+
+    } catch(err) {
+        console.error(err);
+    }
   };
 
   return (
@@ -41,10 +57,10 @@ export default function AuthForm({ userName }: { userName: string }) {
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <p className="pb-4 sm:pb-0">bind youtube channel</p>
-          <button className='d-btn d-btn-neutral d-btn-wide' type="submit" form="authForm">
+          <button className='d-btn d-btn-neutral d-btn-wide' onClick={() => handleSubmit(null)} form="authForm1">
             {isSubmitting? (<span className="d-loading d-loading-spinner"></span>): "Request permit"}
           </button>
-
+            {/* <a href={authUrl} className='d-btn d-btn-neutral d-btn-wide' target="_blank"> Youtube</a> */}
         </div>
       }
     >

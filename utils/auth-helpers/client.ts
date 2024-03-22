@@ -8,7 +8,6 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 
 const supabase = createClient();
 supabase.auth.onAuthStateChange((event, session) => {
-  console.info(event, session);
   if (session && session.provider_token) {
     window.localStorage.setItem('oauth_provider_token', session.provider_token)
   }
@@ -62,25 +61,4 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
       }
     }
   });
-}
-
-export async function linkUserIdentity(e: React.FormEvent<HTMLFormElement>) {
-  const formData = new FormData(e.currentTarget);
-  const provider = String(formData.get('provider')).trim() as Provider;
-  const scope = String(formData.get('scope')).trim();
-  console.info('link user identity', provider, scope);
-  // const supabase = createClient();
-  const redirectURL = getURL('/auth/google');
-  const resp = await supabase.auth.linkIdentity({
-    provider: provider,
-    options: {
-      scopes: scope,
-      redirectTo: redirectURL,
-      queryParams: {
-        prompt: 'select_account',
-      }
-    }
-  });
-
-  console.info(resp.data, resp.error);
 }
