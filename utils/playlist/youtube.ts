@@ -1,5 +1,5 @@
-import { youtube_v3 } from 'googleapis';
-import { OAuth2Client } from 'googleapis-common';
+import { youtube_v3, Common } from 'googleapis';
+// import { OAuth2Client } from 'googleapis-common';
 
 if (!process.env.YOUTUBE_API_KEY) {
     console.error('not found YOUTUBE_API_KEY');
@@ -15,7 +15,7 @@ export type ChannelInfo = {
     playlistId?: string,
 }
 
-export async function channleList(oauth2Client: OAuth2Client) {
+export async function channleList(oauth2Client: Common.OAuth2Client) {
     const {data} = await youtube.channels.list({
         auth: oauth2Client,
         "part": [
