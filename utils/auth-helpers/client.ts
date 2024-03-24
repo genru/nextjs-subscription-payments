@@ -48,13 +48,14 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
   const formData = new FormData(e.currentTarget);
   const provider = String(formData.get('provider')).trim() as Provider;
   // Create client-side supabase client and call signInWithOAuth
-
   const redirectURL = getURL('/auth/callback');
+  console.info(provider,redirectURL)
   await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
       scopes: "https://www.googleapis.com/auth/youtube.readonly",
       redirectTo: redirectURL,
+      skipBrowserRedirect: true,
       queryParams: {
         prompt: 'consent',
         access_type: 'offline'
