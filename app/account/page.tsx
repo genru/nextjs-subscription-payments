@@ -1,9 +1,10 @@
-import AuthForm from '@/components/ui/AccountForms/AuthForm';
+import GoogleForm from '@/components/ui/AccountForms/GoogleForm';
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
 import EmailForm from '@/components/ui/AccountForms/EmailForm';
 import NameForm from '@/components/ui/AccountForms/NameForm';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { getAuthorizationUrl } from '@/utils/google/server';
 
 export default async function Account() {
   const supabase = createClient();
@@ -30,6 +31,9 @@ export default async function Account() {
   if (!user) {
     return redirect('/signin');
   }
+  const url = await getAuthorizationUrl();
+
+  console.info('account page loaded');
 
   return (
     <section className="mb-32 ">
@@ -47,7 +51,7 @@ export default async function Account() {
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />
         <EmailForm userEmail={user.email} />
-        <AuthForm userName={'youtube'}/>
+        <GoogleForm authorizationUrl={url}/>
       </div>
     </section>
   );

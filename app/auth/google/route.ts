@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   // The `/auth/callback` route is required for the server-side auth flow implemented
   // by the `@supabase/ssr` package. It exchanges an auth code for the user's session.
   const requestUrl = new URL(request.url);
-  console.info('callback invoked', requestUrl)
+  // console.info('callback invoked', requestUrl)
   const code = requestUrl.searchParams.get('code');
   if (code) {
     const supabase = createClient();
@@ -14,12 +14,16 @@ export async function GET(request: NextRequest) {
     const {data: {user}} = await supabase.auth.getUser();
     if(user) {
         const token = await finishAuth(code);
-
-        const channelInfo = await getMyChannel();
+        console.info('token', token);
+        try {
+          const channelInfo = await getMyChannel();
         // console.info(channelInfo);
-        const {error } = await supabase.from('users').update({yt_channel: channelInfo}).eq('id', user.id);
-        if(error) {
-            console.error(error);
+          const {error } = await supabase.from('users').update({yt_channel: channelInfo}).eq('id', user.id);
+          if(error) {
+              console.error(error);
+          }
+        } catch (err) {
+          console.warn('/auth/google/', err);
         }
     }
   }

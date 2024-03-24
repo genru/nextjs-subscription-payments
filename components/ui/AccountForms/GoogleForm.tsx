@@ -6,50 +6,48 @@ import { useEffect, useState } from 'react';
 import { getStatusRedirect, getURL, postData } from '@/utils/helpers';
 import { getAuthorizationUrl } from '@/utils/google/server';
 
-export default function AuthForm({ userName }: { userName: string }) {
+export default function GoogleForm({ authorizationUrl }: { authorizationUrl: string }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [authUrl, setAuthUrl] = useState('');
+  // const [authUrl, setAuthUrl] = useState('');
 
-  useEffect(() => {
-    getAuthorizationUrl().then(url => {
-        setAuthUrl(url);
-    });
-  })
-// console.info('mount authForm')
-    let popup: Window | null = null;
+  // useEffect(() => {
+  //   getAuthorizationUrl().then(url => {
+  //       setAuthUrl(url);
+  //   });
+  // })
     const redirect_uri = getURL('/auth/google');
-    // const checkPopup = setInterval(() => {
-    //     console.info(popup?.window.location.href)
-    //     if(popup?.window.location.href.includes(redirect_uri)) {
-    //         popup.close();
-    //     }
-    //     if(!popup || !popup.closed) return;
-    //     clearInterval(checkPopup);
-    // }, 1000);
 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>|null) => {
     // console.log('submitting', e.currentTarget);
     setIsSubmitting(true);
     try {
-        popup = window.open(authUrl, "popup", "popup=true, height=" + 700 + ", width=" + 600);
+        const popup = window.open(authorizationUrl, "popup", "popup=true,height=550,width=500");
+        let finished = false;
         const checkPopup = setInterval(() => {
-            if(popup?.window.location.href.includes(redirect_uri)) {
+          try {
+            console.log(popup?.window.location || 'no location available');
+            if(popup?.window?.location.href.includes(redirect_uri)) {
                 popup.close();
+                finished = true;
             }
             if(!popup || !popup.closed) return;
             clearInterval(checkPopup);
             setIsSubmitting(false);
-            const redirectPath = getStatusRedirect('/', 'Success!', 'Youtube are connected.');
+            const redirectPath = finished ? getStatusRedirect('/account', 'Success!', 'Youtube are connected.')
+              :getStatusRedirect('/account', 'Oops!', 'User canncelled');
             router.push(redirectPath);
+          } catch (e) {
+            console.warn('ignore...', e);
+          }
         },1000)
 
     } catch(err) {
-        console.error(err);
+        console.error('error caught:',err);
     }
   };
-
+console.info('google form loaded successfully')
   return (
     <Card
       title="Your Youtube Channel"

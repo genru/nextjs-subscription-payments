@@ -17,7 +17,7 @@ const oauth2Client = new google.auth.OAuth2(
     redirectUrl
 );
 
-const scopes = [
+const scopes: string[] = [
     'https://www.googleapis.com/auth/youtube.readonly'
 ];
 
@@ -37,10 +37,14 @@ async function getAuthorizationUrl() {
 }
 
 async function finishAuth(code: string) {
-    let { tokens } = await oauth2Client.getToken(code);
-    console.info('finishAuth',tokens);
-    oauth2Client.setCredentials(tokens);
-    return tokens;
+    try {
+        let { tokens } = await oauth2Client.getToken(code);
+        console.info('finishAuth',tokens);
+        oauth2Client.setCredentials(tokens);
+        return tokens;
+    } catch (err) {
+        console.warn('finishAuth error', err);
+    }
 }
 
 async function getMyChannel(): Promise<ChannelInfo> {

@@ -1,5 +1,6 @@
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import Grid from "@/components/ui/Feed/Grid";
+import { getAuthorizationUrl } from "@/utils/google/server";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -36,12 +37,14 @@ export default async function Feeds() {
         console.log(error);
     }
 
+    const googleAuthUrl = await getAuthorizationUrl();
+
     // console.info(feeds)
 
     return (
         <section className="container m-auto px-4 w-full mb-32 py-8 sm:pt-8">
             <Breadcrumbs className="mb-4" paths={[{href:'/',title: 'Home'}, {title: 'My Feeds'}]}/>
-            <Grid feeds={feeds} title="My Feeds"/>
+            <Grid feeds={feeds} title="My Feeds" googleAuthUrl={googleAuthUrl}/>
         </section>
     )
 }
