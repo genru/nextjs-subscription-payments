@@ -1,14 +1,13 @@
 'use client'
 import GridNavbarAction from "./NavbarAction";
 import Card from "./Card";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import { handleRequest } from "@/utils/rss/client";
 import { createFeedByYoutube } from "@/utils/rss/server";
 import { useRouter } from "next/navigation";
 import { getStatusRedirect, getURL } from "@/utils/helpers";
 import RssDlg from "./RssDlg";
 import { PlusCircle } from "lucide-react";
-import { GoogleAuthButton } from "../AccountForms/GoogleAuthButton";
 
 type Feed = { title: string; description: string; cover: string; uuid: string; created_at: string, summary: string}
 
