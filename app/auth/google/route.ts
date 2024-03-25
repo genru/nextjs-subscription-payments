@@ -15,13 +15,14 @@ export async function GET(request: NextRequest) {
     if(user) {
         const token = await finishAuth(code);
         console.info('token', token);
+        const state = requestUrl.searchParams.get('state');
         try {
           const channelInfo = await getMyChannel();
         // console.info(channelInfo);
-          const {error } = await supabase.from('users').update({yt_channel: channelInfo}).eq('id', user.id);
-          if(error) {
-              console.error(error);
-          }
+          // const {error } = await supabase.from('users').update({yt_channel: channelInfo}).eq('id', user.id);
+          // if(error) {
+              // console.error(error);
+          // }
         } catch (err) {
           console.warn('/auth/google/', err);
         }
