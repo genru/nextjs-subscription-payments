@@ -71,6 +71,7 @@ export type Database = {
       feeds: {
         Row: {
           author: string | null
+          channel_info: Json | null
           cover: string | null
           created_at: string
           description: string | null
@@ -84,6 +85,7 @@ export type Database = {
         }
         Insert: {
           author?: string | null
+          channel_info?: Json | null
           cover?: string | null
           created_at?: string
           description?: string | null
@@ -97,6 +99,7 @@ export type Database = {
         }
         Update: {
           author?: string | null
+          channel_info?: Json | null
           cover?: string | null
           created_at?: string
           description?: string | null
@@ -310,7 +313,6 @@ export type Database = {
           full_name: string | null
           id: string
           payment_method: Json | null
-          yt_channel: Json | null
         }
         Insert: {
           avatar_url?: string | null
@@ -318,7 +320,6 @@ export type Database = {
           full_name?: string | null
           id: string
           payment_method?: Json | null
-          yt_channel?: Json | null
         }
         Update: {
           avatar_url?: string | null
@@ -326,7 +327,6 @@ export type Database = {
           full_name?: string | null
           id?: string
           payment_method?: Json | null
-          yt_channel?: Json | null
         }
         Relationships: [
           {
