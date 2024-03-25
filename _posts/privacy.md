@@ -30,6 +30,10 @@ We use your information to:
 
 **We will never share your personal information with third parties without your consent.**
 
+**3rd Party: Google Privacy Policy**
+We use google API service to simplify authorization process.  https://developers.google.com/terms/api-services-user-data-policy
+
+
 **Data Retention**
 
 We will retain your information for as long as your poddiy account is active. You can delete your account at any time, which will also delete your information.

@@ -1,5 +1,5 @@
 import { PostBody } from "@/components/ui/Post/PostBody";
-import { PostHeader } from "@/components/ui/Post/PostHeader";
+import { BlogHeader } from "@/components/ui/Blog/BlogHeader";
 import markdownToHtml, { getPostBySlug } from "@/utils/post/helper";
 
 export default async function Blog({params}: {params: {slug: string}}) {
@@ -7,7 +7,7 @@ export default async function Blog({params}: {params: {slug: string}}) {
     const content = await markdownToHtml(post.content || "");
 
     return (<article className="mb-32 pt-24">
-    <PostHeader
+    <BlogHeader
       title={post.title}
       date={post.date}
     />
