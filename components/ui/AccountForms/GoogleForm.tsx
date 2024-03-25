@@ -1,23 +1,14 @@
 'use client';
 
 import Card from '@/components/ui/Card';
-import { useRouter, redirect } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { getStatusRedirect, getURL, postData } from '@/utils/helpers';
-import { getAuthorizationUrl } from '@/utils/google/server';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { getStatusRedirect, getURL } from '@/utils/helpers';
 
 export default function GoogleForm({ authorizationUrl }: { authorizationUrl: string }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [authUrl, setAuthUrl] = useState('');
-
-  // useEffect(() => {
-  //   getAuthorizationUrl().then(url => {
-  //       setAuthUrl(url);
-  //   });
-  // })
-    const redirect_uri = getURL('/auth/google');
-
+  const redirect_uri = getURL('/auth/google');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>|null) => {
     // console.log('submitting', e.currentTarget);
@@ -47,7 +38,6 @@ export default function GoogleForm({ authorizationUrl }: { authorizationUrl: str
         console.error('error caught:',err);
     }
   };
-console.info('google form loaded successfully')
   return (
     <Card
       title="Your Youtube Channel"

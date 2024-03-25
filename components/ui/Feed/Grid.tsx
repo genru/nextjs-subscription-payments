@@ -38,7 +38,6 @@ export default function Grid({...props}) {
         modal?.showModal();
     }
 
-
     return (
         <>
         <GridNavbarAction title={props.title} onSubmit={onSumbit} />
@@ -63,7 +62,7 @@ function PlaceHolderCard({...props}) {
             let finished = false;
             const checkPopup = setInterval(() => {
                 try {
-                    console.info(popup?.window.location.href);
+                    // console.debug(popup?.window.location.href);
                 if(popup?.window?.location.href.includes(redirect_uri)) {
                     popup.close();
                     finished = true;
