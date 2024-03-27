@@ -31,11 +31,42 @@ These User Terms ("Terms") outline the rules for using our service. By signing u
 * You are responsible for keeping your account secure.
 * You can delete your account at any time.
 
-**4. Changes to Terms**
+**4. Your YouTube Authorization**
+
+To provide full functionality, poddiy requires your permission to access certain information from your YouTube channel. This includes:
+
+- Channel Information: Public data like channel name, profile picture.
+- Video Information: Public data like video titles, descriptions, thumbnails, and upload dates.
+
+**5. Use of Authorized Information**
+
+poddiy will only use the authorized YouTube information to:
+
+- Populate your poddiy feeds with relevant channel details (optional).
+- Assist you in creating and managing your podcast RSS feeds.
+- We will never access or store any private YouTube data, such as video analytics or subscriber information.
+
+**6. Revocation of Authorization**
+
+You can revoke your authorization for poddiy to access your YouTube information at any time through your YouTube account settings. This may limit poddiy's functionality.
+
+**7. Third-Party Services**
+
+Poddiy utilizes YouTube's API, and you agree to abide by their [Terms of Service](https://poddiy.xyz/legal/google-api-service-term).
+
+**8. Disclaimer & Limitations**
+
+Poddiy is provided "as is" and we make no warranties about its functionality or availability. We are not liable for any damages arising from your use of poddiy or authorized YouTube information.
+
+**9. Termination**
+
+We may terminate your access to poddiy for violating these Terms.
+
+**10. Changes to Terms**
 
 We may update these Terms from time to time. We'll notify you of any changes.
 
-**5. Contact Us**
+**11. Contact Us**
 
 If you have any questions, contact us at [help@poddiy.xyz](mailto:help@poddiy.xyz).
 
