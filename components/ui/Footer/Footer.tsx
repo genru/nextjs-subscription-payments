@@ -45,14 +45,6 @@ export default function Footer() {
                 href="/"
                 className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
               >
-                Careers
-              </Link>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link
-                href="/"
-                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
-              >
                 Blog
               </Link>
             </li>
@@ -87,6 +79,14 @@ export default function Footer() {
                 className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
               >
                 Refund Policy
+              </Link>
+            </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <Link
+                href="/legal/google-api-service-term"
+                className="text-white transition duration-150 ease-in-out hover:text-zinc-200"
+              >
+                Google API Services Disclosure
               </Link>
             </li>
 
