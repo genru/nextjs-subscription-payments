@@ -9,17 +9,16 @@ export function usePaddle() {
 
     // Download and initialize Paddle instance from CDN
     useEffect(() => {
-        console.info(process.env['PADDLE_ENVIRONMENT'], process.env.PADDLE_CLIENT_TOKEN)
+        console.info(process.env['NEXT_PUBLIC_PADDLE_ENVIRONMENT'], process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN)
 
-        // if(process.env['PADDLE_ENVIRONMENT']!=='sandbox' && process.env['PADDLE_ENVIRONMENT']!=='production') {
-        //     process.env['PADDLE_ENVIRONMENT'] = 'sandbox'
-        // }
-        // if(!process.env['PADDLE_CLIENT_TOKEN']) {
-        //     console.error('Paddle client token is not set');
-        //     process.env['PADDLE_CLIENT_TOKEN']="live_eda73dc49369e61bf27cc1826af"
-        //     return;
-        // }
-      initializePaddle({ environment: 'sandbox' as Environments, token: "test_71df8473da423e6cfee817e8642", eventCallback: (event) => { console.info(event)} }).then(
+        if(process.env['NEXT_PUBLIC_PADDLE_ENVIRONMENT']!=='sandbox' && process.env['NEXT_PUBLIC_PADDLE_ENVIRONMENT']!=='production') {
+            process.env['NEXT_PUBLIC_PADDLE_ENVIRONMENT'] = 'sandbox'
+        }
+        if(!process.env['NEXT_PUBLIC_PADDLE_CLIENT_TOKEN']) {
+            console.error('Paddle client token is not set');
+            return;
+        }
+      initializePaddle({ environment: process.env['NEXT_PUBLIC_PADDLE_ENVIRONMENT'] as Environments, token: process.env['NEXT_PUBLIC_PADDLE_CLIENT_TOKEN'], eventCallback: (event) => { console.info(event)} }).then(
         (paddleInstance: Paddle | undefined) => {
             console.info('Paddle instance', paddleInstance)
           if (paddleInstance) {
