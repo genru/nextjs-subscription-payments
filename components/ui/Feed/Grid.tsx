@@ -89,7 +89,7 @@ function PlaceHolderCard({...props}) {
                 {/* <GoogleAuthButton></GoogleAuthButton> */}
                 {/* <p className="text-xs flex-none text-center text-zinc-500">authorizate to access your youtube channel</p> */}
                 <p className="text-xs flex-none text-center text-zinc-400">
-                    By continuing, you confirm that the video you share to YouTube complies with YouTube’s&nbsp;<a className="underline" target="_blank" href="https://www.youtube.com/t/terms">Terms of Service</a>&nbsp;and does not infringe upon other people’s intellectual property rights and privacy. Check our&nbsp;<a className="underline" target="_blank" href="/legal/google-api-service-term">Google API Services Disclosure</a>.</p>
+                    By continuing, you confirm that you agree to our&nbsp;<a className="underline" target="_blank" href="/legal/privacy">Privacy Policy</a>&nbsp;and&nbsp;<a className="underline" target="_blank" href="/legal/terms">Terms of Service</a>&nbsp;and&nbsp; Check our&nbsp;<a className="underline" target="_blank" href="/legal/google-api-service-term">Google API Services Disclosure</a>.</p>
             </div>
         </div>
     )

@@ -29,7 +29,7 @@ export default function Card({...props}) {
             <div className="d-card-body w-96">
                 {/* <h2 className="d-card-title">{feed.title}</h2> */}
                 <NavbarAction title={feed.title} uuid={feed.uuid} onDelete={onDelete} disableDelete={isDeleting} />
-                <p className="text-xs h-12 w-auto overflow-ellipsis overflow-clip">{feed.summary}</p>
+                <p className="text-xs h-12 w-auto overflow-ellipsis overflow-clip line-clamp-6">{feed.summary}</p>
                 <div>
                 <ul className="inline-flex items-center gap-2 list-none *:flex *:items-center *:gap-1">
                     <li>
@@ -57,8 +57,10 @@ export default function Card({...props}) {
 function NavbarAction({title, uuid, onDelete, disableDelete}) {
     return (
         <div className="d-navbar h-4 min-h-8 p-0 ">
-            <div className="flex-1">
-                <h2 className="text-lg leading-5">{title}</h2>
+            <div className="flex-1" >
+                <div className="d-tooltip text-left" data-tip={title}>
+                    <h2 className="text-lg leading-5 line-clamp-2">{title}</h2>
+                </div>
             </div>
             <div className="flex-none">
                 {disableDelete ? (
