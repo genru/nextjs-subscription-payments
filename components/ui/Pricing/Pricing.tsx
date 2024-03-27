@@ -49,7 +49,13 @@ export default function Pricing({ user, products, subscription }: Props) {
   const currentPath = usePathname();
 
   const handlePaddleCheckout = (price: Price) => {
-    paddle?.Checkout.open({items:[{priceId: price.id}], settings: {
+    setPriceIdLoading(price.id);
+
+    if(!user) {
+      setPriceIdLoading(undefined);
+      return router.push('/signin/signup');
+    }
+    paddle?.Checkout.open({items:[{priceId: price.id}], customer:{email: 'test@mail.com'}, customData:{userId: user.id}, settings: {
       displayMode: "overlay",
       theme: "light",
       locale: "en",

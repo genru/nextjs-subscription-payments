@@ -1,5 +1,6 @@
 import Pricing from '@/components/ui/Pricing/Pricing';
 import { createClient } from '@/utils/supabase/server';
+import { cache } from 'react';
 
 
 export default async function PricingPage() {
@@ -17,7 +18,6 @@ export default async function PricingPage() {
           .select('*, prices(*, products(*))')
           .in('status', ['trialing', 'active'])
           .maybeSingle();
-
         if (error) {
           console.log(error);
         }
@@ -38,7 +38,8 @@ export default async function PricingPage() {
         };
 
     }
-    const {user, products, subscription} = await getData();
+    const fetchData = cache(getData);
+    const {user, products, subscription} = await fetchData();
   return (
     <Pricing
       user={user}

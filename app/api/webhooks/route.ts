@@ -3,7 +3,7 @@ import { stripe } from '@/utils/stripe/config';
 import {
   upsertProductRecord,
   upsertPriceRecord,
-  manageSubscriptionStatusChange,
+  manageStripeSubscriptionStatusChange,
   deleteProductRecord,
   deletePriceRecord
 } from '@/utils/supabase/admin';
@@ -82,7 +82,7 @@ async function processStripeEvent(req: Request) {
         case 'customer.subscription.updated':
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription;
-          await manageSubscriptionStatusChange(
+          await manageStripeSubscriptionStatusChange(
             subscription.id,
             subscription.customer as string,
             event.type === 'customer.subscription.created'
@@ -92,7 +92,7 @@ async function processStripeEvent(req: Request) {
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
           if (checkoutSession.mode === 'subscription') {
             const subscriptionId = checkoutSession.subscription;
-            await manageSubscriptionStatusChange(
+            await manageStripeSubscriptionStatusChange(
               subscriptionId as string,
               checkoutSession.customer as string,
               true

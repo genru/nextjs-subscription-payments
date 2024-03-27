@@ -1,5 +1,5 @@
-import { Paddle, EventName, ProductNotification, PriceNotification } from '@paddle/paddle-node-sdk'
-import { upsertPriceRecord, upsertProductRecord } from '../supabase/admin';
+import { Paddle, EventName, ProductNotification, PriceNotification, SubscriptionNotification } from '@paddle/paddle-node-sdk'
+import { upsertPriceRecord, upsertProductRecord, upsertSubscriptionRecord } from '../supabase/admin';
 const paddle = new Paddle('0d7ae86d1c87513363e93aa9399f8ef7f83b6e7ab5f5b25584')
 export async function processPaddleEvent(req: Request) {
     let resp: Response = new Response('ok');
@@ -34,8 +34,16 @@ export async function processPaddleEvent(req: Request) {
 
               case EventName.PriceImported:
                 console.log(eventData.data as PriceNotification);
+                break;
+              case EventName.CustomerCreated:
+              case EventName.CustomerUpdated:
+                break;
+              case EventName.SubscriptionCreated:
               case EventName.SubscriptionUpdated:
-                console.log(`Subscription ${eventData.data.id} was updated`);
+              case EventName.SubscriptionCanceled:
+              case EventName.SubscriptionActivated:
+                  const subscription = eventData.data as SubscriptionNotification;
+                await upsertSubscriptionRecord(subscription);
                 break;
               default:
                 console.warn(`${eventData?.eventType} is not supported`);
@@ -57,3 +65,7 @@ export async function processPaddleEvent(req: Request) {
 
     return resp;
   }
+
+function upsertCustomerToSupabase(arg0: any, customerId: string) {
+  throw new Error('Function not implemented.');
+}

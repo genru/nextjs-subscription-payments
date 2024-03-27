@@ -3,7 +3,7 @@
 import Stripe from 'stripe';
 import { stripe } from '@/utils/stripe/config';
 import { createClient } from '@/utils/supabase/server';
-import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
+import { createOrRetrieveStripeCustomer } from '@/utils/supabase/admin';
 import {
   getURL,
   getErrorRedirect,
@@ -38,7 +38,7 @@ export async function checkoutWithStripe(
     // Retrieve or create the customer in Stripe
     let customer: string;
     try {
-      customer = await createOrRetrieveCustomer({
+      customer = await createOrRetrieveStripeCustomer({
         uuid: user?.id || '',
         email: user?.email || ''
       });
@@ -136,7 +136,7 @@ export async function createStripePortal(currentPath: string) {
 
     let customer;
     try {
-      customer = await createOrRetrieveCustomer({
+      customer = await createOrRetrieveStripeCustomer({
         uuid: user.id || '',
         email: user.email || ''
       });

@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 import Stripe from 'stripe';
 import type { Database, Json, Tables, TablesInsert } from 'types_db';
 import { FeedInfo } from '../playlist/server';
-import { PriceNotification, ProductNotification } from '@paddle/paddle-node-sdk';
+import { PriceNotification, ProductNotification, SubscriptionNotification } from '@paddle/paddle-node-sdk';
 // import { Stream } from 'stream';
 
 type Product = Tables<'products'>;
@@ -139,6 +139,51 @@ const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
   return customerId;
 };
 
+const upsertSubscriptionRecord = async (subscription: SubscriptionNotification) => {
+  // @ts-ignore
+  let uuid = subscription.customData['userId'];
+  if(!uuid) {
+    const {data: customer, error: customerError} = await supabaseAdmin.from('customers').select('id').eq('stripe_customer_id', subscription.customerId).single()
+    if(customerError) {
+      throw new Error(`Supabase customer record select failed: ${customerError}`);
+    }
+    uuid = customer?.id;
+  }
+  const subscriptionData: TablesInsert<'subscriptions'> = {
+    id: subscription.id,
+    user_id: uuid,
+    metadata: {},//subscription.metadata,
+    status: subscription.status,
+    price_id: subscription.items[0].price?.id,
+    //TODO check quantity on subscription
+
+    quantity: subscription.items[0].quantity,
+    cancel_at_period_end: subscription.scheduledChange && subscription.scheduledChange.action=='cancel' || false,
+    cancel_at: subscription.scheduledChange && subscription.scheduledChange.effectiveAt,
+      // ? toDateTime(subscription.cancel_at).toISOString()
+      // : null,
+    canceled_at: subscription.canceledAt,
+      // ? toDateTime(subscription.canceled_at).toISOString()
+      // : null,
+    current_period_start: subscription.currentBillingPeriod?.startsAt,
+    current_period_end: subscription.currentBillingPeriod?.endsAt,
+    created: subscription.createdAt,
+    ended_at: subscription.canceledAt,
+    trial_start: subscription.items[0].trialDates?.startsAt,
+    trial_end: subscription.items[0].trialDates?.endsAt
+  };
+
+  const { error: upsertError } = await supabaseAdmin
+    .from('subscriptions')
+    .upsert([subscriptionData]);
+  if (upsertError)
+    throw new Error(`Subscription insert/update failed: ${upsertError}`);
+  console.log(
+    `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
+  );
+
+};
+
 const createCustomerInStripe = async (uuid: string, email: string) => {
   const customerData = { metadata: { supabaseUUID: uuid }, email: email };
   const newCustomer = await stripe.customers.create(customerData);
@@ -147,7 +192,7 @@ const createCustomerInStripe = async (uuid: string, email: string) => {
   return newCustomer.id;
 };
 
-const createOrRetrieveCustomer = async ({
+const createOrRetrieveStripeCustomer = async ({
   email,
   uuid
 }: {
@@ -244,7 +289,7 @@ const copyBillingDetailsToCustomer = async (
   if (updateError) throw new Error(`Customer update failed: ${updateError}`);
 };
 
-const manageSubscriptionStatusChange = async (
+const manageStripeSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
   createAction = false
@@ -472,10 +517,11 @@ const findFeedMedia = async (feedId: string) => {
 export {
   upsertProductRecord,
   upsertPriceRecord,
+  upsertSubscriptionRecord,
   deleteProductRecord,
   deletePriceRecord,
-  createOrRetrieveCustomer,
-  manageSubscriptionStatusChange,
+  createOrRetrieveStripeCustomer,
+  manageStripeSubscriptionStatusChange,
   createFeed,
   findFeed,
   uploadMedia,

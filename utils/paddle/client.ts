@@ -19,7 +19,7 @@ export function usePaddle() {
         //     process.env['PADDLE_CLIENT_TOKEN']="live_eda73dc49369e61bf27cc1826af"
         //     return;
         // }
-      initializePaddle({ environment: 'sandbox' as Environments, token: "live_eda73dc49369e61bf27cc1826af", eventCallback: (event) => { console.info(event)} }).then(
+      initializePaddle({ environment: 'sandbox' as Environments, token: "test_71df8473da423e6cfee817e8642", eventCallback: (event) => { console.info(event)} }).then(
         (paddleInstance: Paddle | undefined) => {
             console.info('Paddle instance', paddleInstance)
           if (paddleInstance) {
