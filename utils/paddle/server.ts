@@ -1,6 +1,7 @@
 import { Paddle, EventName, ProductNotification, PriceNotification, SubscriptionNotification } from '@paddle/paddle-node-sdk'
 import { upsertPriceRecord, upsertProductRecord, upsertSubscriptionRecord } from '../supabase/admin';
-const paddle = new Paddle('0d7ae86d1c87513363e93aa9399f8ef7f83b6e7ab5f5b25584')
+
+const paddle = new Paddle(process.env.PADDLE_API_KEY!);
 export async function processPaddleEvent(req: Request) {
     let resp: Response = new Response('ok');
     try {
@@ -64,8 +65,5 @@ export async function processPaddleEvent(req: Request) {
     }
 
     return resp;
-  }
-
-function upsertCustomerToSupabase(arg0: any, customerId: string) {
-  throw new Error('Function not implemented.');
 }
+
