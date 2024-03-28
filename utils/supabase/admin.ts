@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 import Stripe from 'stripe';
 import type { Database, Json, Tables, TablesInsert } from 'types_db';
 import { FeedInfo } from '../playlist/server';
-import { PriceNotification, ProductNotification, SubscriptionNotification } from '@paddle/paddle-node-sdk';
+import { AddressNotification, PriceNotification, ProductNotification, SubscriptionNotification } from '@paddle/paddle-node-sdk';
 // import { Stream } from 'stream';
 
 type Product = Tables<'products'>;
@@ -173,15 +173,21 @@ const upsertSubscriptionRecord = async (subscription: SubscriptionNotification) 
     trial_end: subscription.items[0].trialDates?.endsAt
   };
 
+  if(subscription.status === 'canceled') {
+    delete subscriptionData.current_period_start;
+    delete subscriptionData.current_period_end;
+  }
+
   const { error: upsertError } = await supabaseAdmin
     .from('subscriptions')
     .upsert([subscriptionData]);
-  if (upsertError)
-    throw new Error(`Subscription insert/update failed: ${upsertError}`);
-  console.log(
-    `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
-  );
+  if (upsertError) {
+    console.log(
+      `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`, upsertError
+    );
 
+    throw new Error(`Subscription insert/update failed: ${upsertError}`);
+    }
 };
 
 const createCustomerInStripe = async (uuid: string, email: string) => {
@@ -288,6 +294,16 @@ const copyBillingDetailsToCustomer = async (
     .eq('id', uuid);
   if (updateError) throw new Error(`Customer update failed: ${updateError}`);
 };
+
+const updateUserAddress = async (address: AddressNotification) => {
+  const customerId = address.customerId;
+  if (!customerId) {
+    console.warn(`Customer has no customer ID`);
+    return;
+  }
+  const {data: customerData} = await supabaseAdmin.from('customers').select("*").eq('stripe_customer_id', customerId).maybeSingle();
+
+}
 
 const manageStripeSubscriptionStatusChange = async (
   subscriptionId: string,

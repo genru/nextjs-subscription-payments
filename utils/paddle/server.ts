@@ -1,7 +1,10 @@
-import { Paddle, EventName, ProductNotification, PriceNotification, SubscriptionNotification } from '@paddle/paddle-node-sdk'
+'use server';
+import { Paddle, EventName, ProductNotification, PriceNotification, SubscriptionNotification, CancelSubscription } from '@paddle/paddle-node-sdk'
 import { upsertPriceRecord, upsertProductRecord, upsertSubscriptionRecord } from '../supabase/admin';
+import { getErrorRedirect, getStatusRedirect } from '../helpers';
 
 const paddle = new Paddle(process.env.PADDLE_API_KEY!);
+console.info(process.env.PADDLE_API_KEY!)
 export async function processPaddleEvent(req: Request) {
     let resp: Response = new Response('ok');
     try {
@@ -39,6 +42,8 @@ export async function processPaddleEvent(req: Request) {
               case EventName.CustomerCreated:
               case EventName.CustomerUpdated:
                 break;
+              case EventName.AddressCreated:
+                break;
               case EventName.SubscriptionCreated:
               case EventName.SubscriptionUpdated:
               case EventName.SubscriptionCanceled:
@@ -67,3 +72,26 @@ export async function processPaddleEvent(req: Request) {
     return resp;
 }
 
+export async function cancelSubscription(currentPath: string, subscriptionId: string, immediately: boolean = false) {
+  // paddle.subscriptions.cancel()
+  const body: CancelSubscription = {};
+  body.effectiveFrom = immediately ? 'immediately':'next_billing_period';
+  try {
+    console.info(subscriptionId)
+    const subscription = await paddle.subscriptions.cancel(subscriptionId, body);
+    console.log(subscription);
+    // return subscription;
+    return getStatusRedirect(
+      currentPath,
+      'Successful',
+      'Cancel subscription successfully'
+    );
+  } catch (err) {
+    console.warn(err);
+    return getErrorRedirect(
+      currentPath,
+      'Failed',
+      'Cancel subscription failed'
+    );
+  }
+}
